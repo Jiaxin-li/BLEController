@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
 import com.robotic.goldenridge.blecontroller.JoystickView.OnJoystickMoveListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
                     angle = -(180 + angle);
                 }
                 //send("!" + angle + ":" + power + "*");
+                //setContentView(R.layout.activity_main);
+                TextView tvspeed = (TextView)findViewById(R.id.speed_value);
+                tvspeed.setText(String.valueOf(power));
+                TextView tvsteer = (TextView)findViewById(R.id.steer_value);
+                tvsteer.setText(String.valueOf(angle));
             }
         }, JoystickView.DEFAULT_LOOP_INTERVAL);
 
