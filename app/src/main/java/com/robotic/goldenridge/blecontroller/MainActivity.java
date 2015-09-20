@@ -1,16 +1,41 @@
 package com.robotic.goldenridge.blecontroller;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.robotic.goldenridge.blecontroller.JoystickView.OnJoystickMoveListener;
 
 public class MainActivity extends AppCompatActivity {
+    private JoystickView joystick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        joystick = (JoystickView) findViewById(R.id.joystickView);
+        joystick.setOnJoystickMoveListener(new OnJoystickMoveListener() {
+
+            @Override
+            public void onValueChanged(int angle, int power, int direction) {
+                // Scale speed
+                if (angle < -90 || angle > 90) {
+                    power *= -1;
+                }
+
+                // X to Y adapter
+                if (angle > 90) {
+                    angle = 180 - angle;
+                } else if (angle < -90) {
+                    angle = -(180 + angle);
+                }
+                //send("!" + angle + ":" + power + "*");
+            }
+        }, JoystickView.DEFAULT_LOOP_INTERVAL);
+
+
     }
 
     @Override
@@ -28,8 +53,15 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id){
+
+            case R.id.action_scan:
+                startActivity(new Intent(this,ScanActivity.class));
+                break;
+            case R.id.action_settings:
+                break;
+            default:
+
         }
 
         return super.onOptionsItemSelected(item);

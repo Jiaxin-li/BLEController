@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">BLEController</string>
+    <string name="speed_label">Speed :</string>
+    <string name="init_value">0</string>
+    <string name="steering_label">Steering :</string>
+    <string name="action_settings">Settings</string>
+    <string name="activity_scan">ScanActivity</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
 </resources>
