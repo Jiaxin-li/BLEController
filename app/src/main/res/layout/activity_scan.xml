@@ -11,26 +11,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/Text" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp" >
-
-        <Button
-            android:id="@+id/turnOn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/on" />
-
-        <Button
-            android:id="@+id/turnOff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/off" />
-
-    </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,10 +19,10 @@
         android:layout_marginTop="80dp" >
 
         <Button
-            android:id="@+id/paired"
+            android:id="@+id/connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/List" />
+            android:text="@string/Connect" />
 
         <Button
             android:id="@+id/search"
