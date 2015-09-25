@@ -7,4 +7,14 @@
     <string name="activity_scan">Scan Available Device </string>
     <string name="scan_btn">Scan</string>
     <string name="hello_world">Hello world!</string>
+    <string name="stop_scan">Stop Scanning</string>
+
+
+    <string name="Text">Status: -</string>
+    <string name="on">Turn On</string>
+    <string name="off">Turn Off</string>
+    <string name="List">List paired Devices</string>
+    <string name="Find">Search new Devices / Cancel</string>
+    <string name="title_activity_scan">ScanActivity</string>
+
 </resources>
