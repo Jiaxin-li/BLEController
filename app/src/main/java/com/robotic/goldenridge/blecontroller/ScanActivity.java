@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,8 +21,8 @@ import java.util.Set;
 
 public class ScanActivity extends AppCompatActivity {
 
-    private static final int REQUEST_ENABLE_BT = 1;
 
+    private static final int REQUEST_ENABLE_BT = 1;
     private Button connectBtn;
     private Button findBtn;
     private TextView text;
@@ -32,7 +30,8 @@ public class ScanActivity extends AppCompatActivity {
     private Set<BluetoothDevice> pairedDevices;
     private ListView myListView;
     private ArrayAdapter<String> BTArrayAdapter;
-    private static String slect;
+    static String select;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +61,7 @@ public class ScanActivity extends AppCompatActivity {
             // get paired devices
             pairedDevices = myBluetoothAdapter.getBondedDevices();
 
-            // put it's one to the adapter
-            for(BluetoothDevice device : pairedDevices)
-                BTArrayAdapter.add(device.getName()+ "\n" + device.getAddress());
+
 
 
             text = (TextView) findViewById(R.id.text);
@@ -96,11 +93,15 @@ public class ScanActivity extends AppCompatActivity {
 
             // create the arrayAdapter that contains the BTDevices, and set it to the ListView
             BTArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+            // put it's one to the adapter
+            for(BluetoothDevice device : pairedDevices)
+                BTArrayAdapter.add(device.getName()+ "\n" + device.getAddress());
             myListView.setAdapter(BTArrayAdapter);
+
 
             myListView.setOnItemClickListener(new AdapterView.OnItemClickListener( ) {
                 public void onItemClick(AdapterView <?> parent, View view, int position, long id) {
-                    slect = parent.getItemAtPosition(position).toString();
+                    select = parent.getItemAtPosition(position).toString();
                 }
             });
         }
@@ -122,14 +123,16 @@ public class ScanActivity extends AppCompatActivity {
 
     public void connect(View view){
 
-        if(slect == null){
+        if(select == null){
             Toast.makeText(getApplicationContext(),"Please select a device to connect",
                     Toast.LENGTH_SHORT).show();
         }
         else{
-            String devname = slect.split("\n")[slect.split("\n").length - 1];
+            String devname = select.split("\n")[select.split("\n").length - 1];
             Toast.makeText(getApplicationContext(),devname,
                           Toast.LENGTH_SHORT).show();
+            MainActivity.btc = new BluetoothConnection(devname);
+            MainActivity.joystick.setEnabled(true);
         }
         //Toast.makeText(getApplicationContext(),"Show Paired Devices",
          //       Toast.LENGTH_SHORT).show();

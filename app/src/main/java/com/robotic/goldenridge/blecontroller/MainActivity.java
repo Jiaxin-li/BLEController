@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.robotic.goldenridge.blecontroller.JoystickView.OnJoystickMoveListener;
 
 public class MainActivity extends AppCompatActivity {
-    private JoystickView joystick;
-
+    public static JoystickView joystick;
+    public static BluetoothConnection btc ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,15 +33,18 @@ public class MainActivity extends AppCompatActivity {
                 } else if (angle < -90) {
                     angle = -(180 + angle);
                 }
-                //send("!" + angle + ":" + power + "*");
-                //setContentView(R.layout.activity_main);
+                if(btc != null){
+                    btc.sendToManualMode(angle + ":" + power);
+                }
+
+
                 TextView tvspeed = (TextView)findViewById(R.id.speed_value);
                 tvspeed.setText(String.valueOf(power));
                 TextView tvsteer = (TextView)findViewById(R.id.steer_value);
                 tvsteer.setText(String.valueOf(angle));
             }
         }, JoystickView.DEFAULT_LOOP_INTERVAL);
-
+        joystick.setEnabled(false);
 
     }
 
