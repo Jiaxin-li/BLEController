@@ -11,7 +11,7 @@ import com.robotic.goldenridge.blecontroller.JoystickView.OnJoystickMoveListener
 
 public class MainActivity extends AppCompatActivity {
     public static JoystickView joystick;
-    public static BluetoothConnection btc ;
+    public static BluetoothConnection btc = null ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

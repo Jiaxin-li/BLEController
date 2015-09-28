@@ -8,8 +8,6 @@
     <string name="scan_btn">Scan</string>
     <string name="hello_world">Hello world!</string>
     <string name="stop_scan">Stop Scanning</string>
-
-
     <string name="Text">Status: -</string>
     <string name="Connect">Connect</string>
     <string name="Disconnect">Disconnect</string>

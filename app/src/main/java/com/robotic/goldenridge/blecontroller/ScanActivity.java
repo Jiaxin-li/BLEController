@@ -6,8 +6,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.StringRes;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,7 +40,9 @@ public class ScanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        text = (TextView) findViewById(R.id.text);
+        connectBtn = (Button)findViewById(R.id.connect);
         // take an instance of BluetoothAdapter - Bluetooth radio
         myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(myBluetoothAdapter == null) {
@@ -57,19 +62,18 @@ public class ScanActivity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(),"Bluetooth turned on" ,
                 //        Toast.LENGTH_LONG).show();
             }
+            if(MainActivity.btc!= null){
+                text.setText("Connect to :" + MainActivity.btc.address);
+                connectBtn.setText(R.string.Disconnect );
+            }
+            else{
+                text.setText("DisConnected");
+                connectBtn.setText(R.string.Connect);
+            }
 
             // get paired devices
             pairedDevices = myBluetoothAdapter.getBondedDevices();
 
-
-
-
-            text = (TextView) findViewById(R.id.text);
-
-
-
-
-            connectBtn = (Button)findViewById(R.id.connect);
             connectBtn.setOnClickListener(new OnClickListener() {
 
                 @Override
@@ -107,6 +111,16 @@ public class ScanActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
     @Override
@@ -123,17 +137,30 @@ public class ScanActivity extends AppCompatActivity {
 
     public void connect(View view){
 
-        if(select == null){
-            Toast.makeText(getApplicationContext(),"Please select a device to connect",
-                    Toast.LENGTH_SHORT).show();
-        }
-        else{
-            String devname = select.split("\n")[select.split("\n").length - 1];
-            Toast.makeText(getApplicationContext(),devname,
-                          Toast.LENGTH_SHORT).show();
-            MainActivity.btc = new BluetoothConnection(devname);
-            MainActivity.joystick.setEnabled(true);
-        }
+
+
+            if(MainActivity.btc==null){
+                if(select == null){
+                    Toast.makeText(getApplicationContext(),"Please select a device to connect",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    String devname = select.split("\n")[select.split("\n").length - 1];
+                    Toast.makeText(getApplicationContext(), devname,
+                            Toast.LENGTH_SHORT).show();
+                    MainActivity.btc = new BluetoothConnection(devname);
+                    text.setText("Connect to :" + MainActivity.btc.address);
+                    connectBtn.setText(R.string.Disconnect );
+                }
+            }
+            else{
+                MainActivity.btc.disconnect();
+                MainActivity.btc = null;
+                text.setText("DisConnected");
+                connectBtn.setText(R.string.Connect);
+            }
+
+
         //Toast.makeText(getApplicationContext(),"Show Paired Devices",
          //       Toast.LENGTH_SHORT).show();
 
@@ -169,11 +196,15 @@ public class ScanActivity extends AppCompatActivity {
     }
 
 
-
+/*
     @Override
     protected void onDestroy() {
         // TODO Auto-generated method stub
         super.onDestroy();
-        unregisterReceiver(bReceiver);
+        if(bReceiver != null){
+            unregisterReceiver(bReceiver);
+        }
+
     }
+    */
 }
