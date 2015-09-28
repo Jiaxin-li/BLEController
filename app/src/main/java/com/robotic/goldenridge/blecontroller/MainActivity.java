@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
                     angle = -(180 + angle);
                 }
                 if(btc != null){
-                    btc.sendToManualMode(angle + ":" + power);
+                    btc.send(angle + "," + power + "\n");
                 }
 
 
