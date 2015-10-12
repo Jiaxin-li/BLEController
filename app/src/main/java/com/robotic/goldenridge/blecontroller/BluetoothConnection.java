@@ -9,9 +9,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
+
+import android.app.Activity;
 import android.bluetooth.*;
+import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.TextView;
 
 public class BluetoothConnection {
     static BluetoothDevice MiDevice;
@@ -20,16 +24,18 @@ public class BluetoothConnection {
     InputStream in;
     static OutputStream out;
     String address;
-    String returnResult;
+    Netstrings nt = new Netstrings();
+    String returnResult ="";
     //String carduino = "98:D3:31:70:22:71";
-
+    CarControlProtos.CarControl.Builder ccb=CarControlProtos.CarControl.newBuilder();
+    byte[] HEADER = {(byte)';'};
     Thread BlueToothThread;
     boolean stop = false;
     int position;
     byte read[];
-    static Netstrings nt = new Netstrings(); // will be replaced
 
-    public BluetoothConnection(String address){
+
+    public BluetoothConnection(String address ){
         this.address = address;
         try {
             runBT();
@@ -80,11 +86,22 @@ public class BluetoothConnection {
                             for(int i=0;i<bytesAvailable;i++) {
                                 byte b = packetBytes[i];
                                // handel
+                                if(b == delimiter) {
+                                    byte[] encodedBytes = new byte[position];
+                                    System.arraycopy(read, 0, encodedBytes, 0, encodedBytes.length);
+                                    returnResult = nt.decodedNetstring(new String(encodedBytes, "US-ASCII"));//new String(encodedBytes, "US-ASCII");//
+                                    updateText(MainActivity.activity,R.id.statusView,returnResult);
+                                    position = 0;
+
+                                }
+                                else{
+                                    read[position++] = b;
+                                }
                             }
                         }
                     }
                     catch (IOException ex) {
-                        stop = true;
+                            stop = true;
                     }
                 }
             }
@@ -95,13 +112,13 @@ public class BluetoothConnection {
     }
 
 
-    public static void send(String msg) {
+    public  void sendString(String msg) {
         try {
 
 
                 if(!msg.isEmpty()) {
                     if (socket.isConnected()) {
-                        out.write(msg.getBytes());
+                        out.write(nt.encodedNetstring(msg).getBytes());
                     }
                 }
             } catch (IOException e) {
@@ -109,16 +126,23 @@ public class BluetoothConnection {
         }
     }
 
-    public void sendToManualMode(String command) {
+    public void sendControl(int speed, int steer) {
         try {
-            String cmd ="";
-            cmd = nt.encodedNetstring(command);
 
-            if(!cmd.isEmpty()) {
+
+
                 if (socket.isConnected()) {
-                    out.write(cmd.getBytes());
+                    ccb.setSpeed(speed);
+                    ccb.setSteer(steer);
+
+                    //String cmd = nt.encodedNetstring(ccb.build().toByteArray());
+
+                    ccb.build().writeTo(out); //use Car control proto
+                    out.write(HEADER); // add byte header
+                    Log.d("ENC", ccb.build().toByteString().toString());
+                    //out.write(cmd.getBytes());
                 }
-            }
+
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -139,6 +163,21 @@ public class BluetoothConnection {
 
     }
 
+    public static void updateText(Activity act,int ID, final String text)
+    {
+
+        final TextView loadingText = (TextView) act.findViewById(ID);
+        act.runOnUiThread(new Runnable()
+        {
+
+            public void run()
+            {
+                loadingText.setText(text);
+
+            }
+
+        });
+    }
 
 
 }

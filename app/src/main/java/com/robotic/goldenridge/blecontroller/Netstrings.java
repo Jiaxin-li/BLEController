@@ -10,6 +10,12 @@ public class Netstrings {
 		return len + ":" + decodedInput + ","; //return a Netstring in the form of [len]":"[string]","
 	}
 
+	String encodedNetstring(byte[] decodedInput){
+		int len = decodedInput.length;
+		if (len == 0) return "error"; //if the input string is empty, return "error"
+		return len + ":" + decodedInput + ","; //return a Netstring in the form of [len]":"[string]","
+	}
+
 	String decodedNetstring(String encodedInput){
         if (encodedInput.contains(",")) encodedInput = encodedInput.replace(",", ""); //remove trailing commas
 		if (encodedInput.length() < 3) return "error1"; //if the Netstring is less than 3 characters, it's either an invalid one or contains an empty string

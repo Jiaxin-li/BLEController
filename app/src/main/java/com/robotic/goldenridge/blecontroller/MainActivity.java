@@ -1,5 +1,6 @@
 package com.robotic.goldenridge.blecontroller;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,11 +13,18 @@ import com.robotic.goldenridge.blecontroller.JoystickView.OnJoystickMoveListener
 public class MainActivity extends AppCompatActivity {
     public static JoystickView joystick;
     public static BluetoothConnection btc = null ;
+    public static TextView stv;
+    public static TextView tvsteer;
+    public static TextView tvspeed;
+    public static TextView font_sonar;
+    public static TextView rare_sonar;
+    public static Activity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        setContentView(R.layout.activity_main);
+        stv= (TextView)findViewById(R.id.statusView);
         joystick = (JoystickView) findViewById(R.id.joystickView);
         joystick.setOnJoystickMoveListener(new OnJoystickMoveListener() {
 
@@ -33,18 +41,20 @@ public class MainActivity extends AppCompatActivity {
                 } else if (angle < -90) {
                     angle = -(180 + angle);
                 }
-                if(btc != null){
-                    btc.send(angle + "," + power + "\n");
+                if (btc != null) {
+                    //btc.sendString(angle + "," + power + "\n");//use plain String to send control
+                    btc.sendControl(power, angle);// use protocol buffer to send command
+
                 }
 
 
-                TextView tvspeed = (TextView)findViewById(R.id.speed_value);
+                tvspeed = (TextView) findViewById(R.id.speed_value);
                 tvspeed.setText(String.valueOf(power));
-                TextView tvsteer = (TextView)findViewById(R.id.steer_value);
+                tvsteer = (TextView) findViewById(R.id.steer_value);
                 tvsteer.setText(String.valueOf(angle));
             }
         }, JoystickView.DEFAULT_LOOP_INTERVAL);
-        joystick.setEnabled(false);
+        activity = this;
 
     }
 
@@ -76,4 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
