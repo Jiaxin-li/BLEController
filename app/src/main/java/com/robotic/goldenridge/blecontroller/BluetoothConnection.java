@@ -8,6 +8,7 @@ package com.robotic.goldenridge.blecontroller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.UUID;
 
 import android.app.Activity;
@@ -23,12 +24,14 @@ public class BluetoothConnection {
     BluetoothAdapter adapt;
     InputStream in;
     static OutputStream out;
+    //static PrintWriter writer;
     String address;
     Netstrings nt = new Netstrings();
     String returnResult ="";
     //String carduino = "98:D3:31:70:22:71";
     CarControlProtos.CarControl.Builder ccb=CarControlProtos.CarControl.newBuilder();
-    byte[] HEADER = {(byte)';'};
+    CarControlProtos.CarControl ctrl;
+
     Thread BlueToothThread;
     boolean stop = false;
     int position;
@@ -62,6 +65,7 @@ public class BluetoothConnection {
         socket.connect();
         out = socket.getOutputStream();
         in = socket.getInputStream();
+       // writer = new PrintWriter(out);
 //      data.setText("connection established");
 
         //gets data
@@ -134,16 +138,24 @@ public class BluetoothConnection {
                 if (socket.isConnected()) {
                     ccb.setSpeed(speed);
                     ccb.setSteer(steer);
+                    ctrl = ccb.build();
+                    String length= Integer.toString(ctrl.getSerializedSize());
+                    out.write(length.getBytes());
+                    out.write((byte)':');
+                    ctrl.writeTo(out);
+                    out.write((byte)',');
+
 
                     //String cmd = nt.encodedNetstring(ccb.build().toByteArray());
 
-                    ccb.build().writeTo(out); //use Car control proto
-                    out.write(HEADER); // add byte header
-                    Log.d("ENC", ccb.build().toByteString().toString());
-                    //out.write(cmd.getBytes());
+                    //ccb.build().writeTo(out); //use Car control proto
+                    //out.write(HEADER); // add byte header
+                    //Log.d ("ENC", cmd);
+                    //out.write(cmd.getBytes());// getBytes add [B@ at begining
+                   // writer.println(cmd);
                 }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
 
         }
