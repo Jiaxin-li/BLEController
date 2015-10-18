@@ -10,13 +10,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import java.util.UUID;
-
-import android.app.Activity;
 import android.bluetooth.*;
-
-import android.os.Handler;
 import android.util.Log;
-import android.widget.TextView;
+
 
 public class BluetoothConnection {
     static BluetoothDevice MiDevice;
@@ -27,7 +23,7 @@ public class BluetoothConnection {
 
     String address;
     Netstrings nt = new Netstrings();
-    String returnResult ="";
+
     //String carduino = "98:D3:31:70:22:71";
     CarControlProtos.CarControl.Builder ccb=CarControlProtos.CarControl.newBuilder();
     CarControlProtos.CarControl ctrl;
@@ -66,9 +62,7 @@ public class BluetoothConnection {
         out = socket.getOutputStream();
         in = socket.getInputStream();
 
-        //gets data
-        final Handler handler = new Handler();
-        final byte delimiter = 10;
+
 
         stop = false;
         position = 0;
@@ -78,40 +72,8 @@ public class BluetoothConnection {
             public void run() {
 
                 while(!Thread.currentThread().isInterrupted() && !stop) {
-                    Log.d("DEC","running");
+                   // Log.d("DEC","running");
                     MainActivity.fbhandle.handleFeedback(in);// didn't work!! InvalidProtocolBufferException: Protocol message end-group tag did not match expected tag.
-
-                    /*
-                    try {
-
-
-                        int bytesAvailable = in.available();
-                        if(bytesAvailable > 0) {
-                            byte[] packetBytes = new byte[bytesAvailable];
-                            in.read(packetBytes);
-                            for(int i=0;i<bytesAvailable;i++) {
-                                byte b = packetBytes[i];
-                               // handel
-                                if(b == delimiter) {
-                                    byte[] encodedBytes = new byte[position];
-                                    System.arraycopy(read, 0, encodedBytes, 0, encodedBytes.length);
-                                    Log.d("DEC", new String(encodedBytes)); // print out encodedBytes
-                                    //returnResult = nt.decodedNetstring(new String(encodedBytes, "US-ASCII"));//new String(encodedBytes, "US-ASCII");//
-                                    MainActivity.fbhandle.handleFeedback(encodedBytes);
-                                    position = 0;
-
-                                }
-                                else{
-                                    read[position++] = b;
-                                }
-                            }
-                        }
-
-                    }
-                    catch (IOException ex) {
-                            stop = true;
-                    }
-                    */
                 }
             }
         });
@@ -121,7 +83,7 @@ public class BluetoothConnection {
     }
 
 
-    public  void sendString(String msg) {
+    public  void sendString(String msg) { // reserved function
         try {
 
 
@@ -144,20 +106,12 @@ public class BluetoothConnection {
                     ccb.setSpeed(speed);
                     ccb.setSteer(steer);
                     ctrl = ccb.build();
-                    String length= Integer.toString(ctrl.getSerializedSize());
-                    out.write(length.getBytes());
-                    out.write((byte)':');
-                    ctrl.writeTo(out);
+                    //String length= Integer.toString(ctrl.getSerializedSize());
+                    //out.write(length.getBytes());
+                    //out.write((byte)':');
+                    ctrl.writeDelimitedTo(out);
                     out.write((byte)',');
 
-
-                    //String cmd = nt.encodedNetstring(ccb.build().toByteArray());
-
-                    //ccb.build().writeTo(out); //use Car control proto
-                    //out.write(HEADER); // add byte header
-                    //Log.d ("ENC", cmd);
-                    //out.write(cmd.getBytes());// getBytes add [B@ at begining
-                   // writer.println(cmd);
                 }
 
         } catch (Exception e) {

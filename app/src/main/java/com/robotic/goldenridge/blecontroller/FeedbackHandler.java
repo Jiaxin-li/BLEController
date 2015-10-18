@@ -21,14 +21,14 @@ public class FeedbackHandler {
 
     public void handleFeedback(InputStream in){
         try {
-            Log.d("DEC","handleFeedback");
+           // Log.d("DEC","handleFeedback");
             fb = CarControlProtos.FeedBack.parseDelimitedFrom(in);
-            Log.d("DEC", "parse feedback");
+            //Log.d("DEC", "parse feedback");
             processFeedback(fb);
-            Log.d("DEC", "sent feedback toprocess ");
+            //Log.d("DEC", "sent feedback toprocess ");
 
         } catch (IOException e) {
-            Log.d("DEC","exception");
+            Log.d("DEC","IOException");
             e.printStackTrace();
         }
 
@@ -48,7 +48,7 @@ public class FeedbackHandler {
     }
 
     private void processFeedback(CarControlProtos.FeedBack fb){
-        Log.d("DEC","process feedback");
+       // Log.d("DEC","process feedback");
         if(fb != null){
 
         if(fb.hasDecode()){
