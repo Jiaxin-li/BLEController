@@ -19,33 +19,19 @@ public class FeedbackHandler {
         this.act = act;
     }
 
-    public void handleFeedback(InputStream in){
-        try {
+    public void handleFeedback(InputStream in) throws IOException {
+
            // Log.d("DEC","handleFeedback");
             fb = CarControlProtos.FeedBack.parseDelimitedFrom(in);
             //Log.d("DEC", "parse feedback");
             processFeedback(fb);
             //Log.d("DEC", "sent feedback toprocess ");
 
-        } catch (IOException e) {
-            Log.d("DEC","IOException");
-            e.printStackTrace();
-        }
+
 
     }
 
-    public void handleFeedback(byte[] in){
 
-        try {
-
-            fb = CarControlProtos.FeedBack.parseFrom(in);
-        } catch (InvalidProtocolBufferException e) {
-            Log.d("DEC","InvalidProtocolBufferException");
-            e.printStackTrace();
-        }
-        processFeedback(fb);
-
-    }
 
     private void processFeedback(CarControlProtos.FeedBack fb){
        // Log.d("DEC","process feedback");
@@ -64,13 +50,13 @@ public class FeedbackHandler {
             updateText(act,R.id.decode_value,act.getString(R.string.init_value));
         }
 
-        if(fb.hasFrontDist()){
+        //if(fb.hasFrontDist()){
             updateText(act, R.id.front_value, Integer.toString(fb.getFrontDist()));
 
-        }
-        else{
-            updateText(act,R.id.front_value,act.getString(R.string.init_value));
-        }
+        //}
+        //else{
+        //    updateText(act,R.id.front_value,act.getString(R.string.init_value));
+        //}
 
         if(fb.hasRearDist()){
             updateText(act, R.id.rear_value, Integer.toString(fb.getRearDist()));

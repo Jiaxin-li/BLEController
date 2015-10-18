@@ -73,7 +73,12 @@ public class BluetoothConnection {
 
                 while(!Thread.currentThread().isInterrupted() && !stop) {
                    // Log.d("DEC","running");
-                    MainActivity.fbhandle.handleFeedback(in);// didn't work!! InvalidProtocolBufferException: Protocol message end-group tag did not match expected tag.
+                    try {
+                        MainActivity.fbhandle.handleFeedback(in);// didn't work!! InvalidProtocolBufferException: Protocol message end-group tag did not match expected tag.
+                    } catch (IOException e) {
+                        stop = true;
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -110,7 +115,7 @@ public class BluetoothConnection {
                     //out.write(length.getBytes());
                     //out.write((byte)':');
                     ctrl.writeDelimitedTo(out);
-                    out.write((byte)',');
+                    out.write((byte) ',');
 
                 }
 
