@@ -16,8 +16,7 @@ public class MainActivity extends AppCompatActivity {
     public static TextView stv;
     public static TextView tvsteer;
     public static TextView tvspeed;
-    public static TextView font_sonar;
-    public static TextView rare_sonar;
+    public static FeedbackHandler fbhandle;
     public static Activity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }, JoystickView.DEFAULT_LOOP_INTERVAL);
         activity = this;
-
+        fbhandle = new FeedbackHandler(activity);
     }
 
     @Override

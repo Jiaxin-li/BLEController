@@ -8,12 +8,12 @@ package com.robotic.goldenridge.blecontroller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+
 import java.util.UUID;
 
 import android.app.Activity;
 import android.bluetooth.*;
-import android.content.Context;
+
 import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
@@ -24,7 +24,7 @@ public class BluetoothConnection {
     BluetoothAdapter adapt;
     InputStream in;
     static OutputStream out;
-    //static PrintWriter writer;
+
     String address;
     Netstrings nt = new Netstrings();
     String returnResult ="";
@@ -65,8 +65,6 @@ public class BluetoothConnection {
         socket.connect();
         out = socket.getOutputStream();
         in = socket.getInputStream();
-       // writer = new PrintWriter(out);
-//      data.setText("connection established");
 
         //gets data
         final Handler handler = new Handler();
@@ -80,8 +78,12 @@ public class BluetoothConnection {
             public void run() {
 
                 while(!Thread.currentThread().isInterrupted() && !stop) {
+                    Log.d("DEC","running");
+                    MainActivity.fbhandle.handleFeedback(in);// didn't work!! InvalidProtocolBufferException: Protocol message end-group tag did not match expected tag.
 
+                    /*
                     try {
+
 
                         int bytesAvailable = in.available();
                         if(bytesAvailable > 0) {
@@ -93,8 +95,9 @@ public class BluetoothConnection {
                                 if(b == delimiter) {
                                     byte[] encodedBytes = new byte[position];
                                     System.arraycopy(read, 0, encodedBytes, 0, encodedBytes.length);
-                                    returnResult = nt.decodedNetstring(new String(encodedBytes, "US-ASCII"));//new String(encodedBytes, "US-ASCII");//
-                                    updateText(MainActivity.activity,R.id.statusView,returnResult);
+                                    Log.d("DEC", new String(encodedBytes)); // print out encodedBytes
+                                    //returnResult = nt.decodedNetstring(new String(encodedBytes, "US-ASCII"));//new String(encodedBytes, "US-ASCII");//
+                                    MainActivity.fbhandle.handleFeedback(encodedBytes);
                                     position = 0;
 
                                 }
@@ -103,10 +106,12 @@ public class BluetoothConnection {
                                 }
                             }
                         }
+
                     }
                     catch (IOException ex) {
                             stop = true;
                     }
+                    */
                 }
             }
         });
@@ -175,21 +180,7 @@ public class BluetoothConnection {
 
     }
 
-    public static void updateText(Activity act,int ID, final String text)
-    {
 
-        final TextView loadingText = (TextView) act.findViewById(ID);
-        act.runOnUiThread(new Runnable()
-        {
-
-            public void run()
-            {
-                loadingText.setText(text);
-
-            }
-
-        });
-    }
 
 
 }

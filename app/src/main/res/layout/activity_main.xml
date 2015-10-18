@@ -94,11 +94,23 @@
                 android:id="@+id/rear_value" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Status"
-            android:id="@+id/statusView" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/decode_label"
+                android:id="@+id/statusView" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/init_value"
+                android:id="@+id/decode_value" />
+        </LinearLayout>
 
     </LinearLayout>
 
