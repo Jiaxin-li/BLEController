@@ -22,11 +22,10 @@ public class BluetoothConnection {
     static OutputStream out;
 
     String address;
-    Netstrings nt = new Netstrings();
+
 
     //String carduino = "98:D3:31:70:22:71";
-    CarControlProtos.CarControl.Builder ccb=CarControlProtos.CarControl.newBuilder();
-    CarControlProtos.CarControl ctrl;
+
 
     Thread BlueToothThread;
     boolean stop = false;
@@ -61,9 +60,6 @@ public class BluetoothConnection {
         socket.connect();
         out = socket.getOutputStream();
         in = socket.getInputStream();
-
-
-
         stop = false;
         position = 0;
         read = new byte[1024];
@@ -73,12 +69,13 @@ public class BluetoothConnection {
 
                 while(!Thread.currentThread().isInterrupted() && !stop) {
                    // Log.d("DEC","running");
+                    /* // place holder for receiving
                     try {
-                        MainActivity.fbhandle.handleFeedback(in);// didn't work!! InvalidProtocolBufferException: Protocol message end-group tag did not match expected tag.
+
                     } catch (IOException e) {
                         stop = true;
                         e.printStackTrace();
-                    }
+                    } */
                 }
             }
         });
@@ -88,42 +85,16 @@ public class BluetoothConnection {
     }
 
 
-    public  void sendString(String msg) { // reserved function
+
+// send compiled command
+    public void sendControlBytes(byte[] ctrl) {
         try {
-
-
-                if(!msg.isEmpty()) {
-                    if (socket.isConnected()) {
-                        out.write(nt.encodedNetstring(msg).getBytes());
-                    }
-                }
-            } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void sendControl(int speed, int steer) {
-        try {
-
-
-
-                if (socket.isConnected()) {
-                    ccb.setSpeed(speed);
-                    ccb.setSteer(steer);
-                    ctrl = ccb.build();
-                    //String length= Integer.toString(ctrl.getSerializedSize());
-                    //out.write(length.getBytes());
-                    //out.write((byte)':');
-                    ctrl.writeDelimitedTo(out);
-                    out.write((byte) ',');
-
-                }
-
+            if (socket.isConnected()) {
+               out.write(ctrl);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
-
     }
 
     public void disconnect() {

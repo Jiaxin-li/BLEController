@@ -25,7 +25,7 @@ public class JoystickView extends View implements Runnable {
 	public final static int BOTTOM_LEFT = 8;
 	public final static int LEFT = 1;
 	public final static int LEFT_FRONT = 2;
-
+	public final static int SCALE = 255;
 	// Variables
 	private OnJoystickMoveListener onJoystickMoveListener; // Listener
 	private Thread thread = new Thread(this);
@@ -190,7 +190,7 @@ public class JoystickView extends View implements Runnable {
 	}
 
 	private int getPower() {
-		return (int) (100 * Math.sqrt((xPosition - centerX)
+		return (int) (SCALE * Math.sqrt((xPosition - centerX)
 				* (xPosition - centerX) + (yPosition - centerY)
 				* (yPosition - centerY)) / joystickRadius);
 	}

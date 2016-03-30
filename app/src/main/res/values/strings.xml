@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">BLEController</string>
     <string name="speed_label">Speed: </string>
-    <string name="front_sonar_label">Front Distance: </string>
-    <string name="rear_sonar_label">rear  Distance: </string>
-    <string name="decode_label">Decode status: </string>
+    <string name="front_sonar_label">LEFT ENC: </string>
+    <string name="rear_sonar_label">RIGHT ENC: </string>
+    <string name="decode_label">CMD: </string>
     <string name="init_value">N/A</string>
     <string name="steering_label">Steering: </string>
     <string name="action_settings">Settings</string>
     <string name="activity_scan">Scan Available Device </string>
     <string name="scan_btn">Scan</string>
-    <string name="hello_world">Hello world!</string>
+
     <string name="stop_scan">Stop Scanning</string>
     <string name="decode_error">DECODE ERROR</string>
     <string name="decode_success">DECODE SUCCESS</string>
