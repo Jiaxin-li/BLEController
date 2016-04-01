@@ -8,7 +8,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -114,6 +115,38 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout2">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/startbtn"
+            android:src="@android:drawable/button_onoff_indicator_off"
+            android:layout_gravity="center" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/soundbtn0"
+            android:src="@android:drawable/ic_lock_silent_mode_off" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/soundbtn1"
+            android:layout_below="@+id/linearLayout"
+            android:layout_toRightOf="@+id/linearLayout2"
+            android:layout_toEndOf="@+id/linearLayout2"
+            android:src="@android:drawable/ic_lock_silent_mode_off" />
+    </LinearLayout>
+
     <com.robotic.goldenridge.blecontroller.JoystickView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/joystickView"
@@ -122,6 +155,24 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/soundbtn2"
+        android:src="@android:drawable/ic_lock_silent_mode_off"
+        android:layout_alignBottom="@+id/linearLayout2"
+        android:layout_toRightOf="@+id/linearLayout2"
+        android:layout_toEndOf="@+id/linearLayout2" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/soundbtn3"
+        android:src="@android:drawable/ic_lock_silent_mode_off"
+        android:layout_alignBottom="@+id/soundbtn2"
+        android:layout_toRightOf="@+id/soundbtn2"
+        android:layout_toEndOf="@+id/soundbtn2" />
 
 
 </RelativeLayout>

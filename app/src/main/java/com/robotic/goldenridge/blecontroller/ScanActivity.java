@@ -49,10 +49,11 @@ public class ScanActivity extends AppCompatActivity {
 
             connectBtn.setEnabled(false);
             findBtn.setEnabled(false);
-            text.setText("Status: not supported");
+            Toast.makeText(this,R.string.bt_support_err,Toast.LENGTH_SHORT).show();
+            //text.setText("Status: not supported");
 
-            Toast.makeText(getApplicationContext(),"Your device does not support Bluetooth",
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(),"Your device does not support Bluetooth",
+//                    Toast.LENGTH_LONG).show();
         } else {
             // turn on bluetooth
             if (!myBluetoothAdapter.isEnabled()) {

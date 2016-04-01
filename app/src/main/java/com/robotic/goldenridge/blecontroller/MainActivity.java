@@ -6,7 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.robotic.goldenridge.blecontroller.JoystickView.OnJoystickMoveListener;
 
@@ -21,10 +24,12 @@ public class MainActivity extends AppCompatActivity {
     public static TextView tvleft;
     public static TextView tvright;
     public static TextView tvcmd;
+    public static ImageButton startbtn;
+    public static ImageButton[] soundbtns;
 
     private final double RAD = 57.2957795;
     private byte[] cmdBytes;
-
+    boolean OIstatus = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
         tvleft = (TextView) findViewById(R.id.front_value);
         tvright = (TextView) findViewById(R.id.rear_value);
         tvcmd =  (TextView) findViewById(R.id.decode_value);
+        startbtn = (ImageButton) findViewById(R.id.startbtn);
+        soundbtns = new ImageButton[4];
+        soundbtns[0]= (ImageButton) findViewById(R.id.soundbtn0);
+        soundbtns[1]= (ImageButton) findViewById(R.id.soundbtn1);
+        soundbtns[2]= (ImageButton) findViewById(R.id.soundbtn2);
+        soundbtns[3]= (ImageButton) findViewById(R.id.soundbtn3);
+
+
+        addListenerOnButtons();
 
         joystick = (JoystickView) findViewById(R.id.joystickView);
         joystick.setOnJoystickMoveListener(new OnJoystickMoveListener() {
@@ -111,6 +125,57 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+    public void addListenerOnButtons() {
+        startbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                byte[] startcmd = {(byte) 0x80}; // start OI
+                byte[] safemod ={(byte)0x83}; // turn into safe mode
+                byte[] stopcmd ={(byte)0xAD}; // stop OI
+
+                if (btc != null) {
+                    if(OIstatus){// turn off
+                        btc.sendControlBytes(stopcmd);
+                        startbtn.setImageResource(android.R.drawable.button_onoff_indicator_off);
+                        OIstatus =false;
+                    }
+                    else { //turn on
+                        btc.sendControlBytes(startcmd);
+                        //tvcmd.setText(MessageHandler.bytesToHex(startcmd));
+                        btc.sendControlBytes(safemod);
+                        //tvcmd.setText(MessageHandler.bytesToHex(safemod));
+                        startbtn.setImageResource(android.R.drawable.button_onoff_indicator_on);
+                        OIstatus =true;
+                    }
+
+                } else {
+                    Toast.makeText(MainActivity.this,R.string.connection_err, Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+        });
+        for(int i=0;i<4;i++ ){
+            final byte helper = (byte)i; // annoying inner claas can't access non-final value of outer class!
+            soundbtns[i].setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View arg0) {
+                    if (btc != null) {
+                        byte[] soundcmd = {(byte) 0x8D, helper };
+                        btc.sendControlBytes(soundcmd);
+                        tvcmd.setText(MessageHandler.bytesToHex(soundcmd));
+                    } else {
+                        Toast.makeText(MainActivity.this,R.string.connection_err, Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+            });
+        }
+        }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

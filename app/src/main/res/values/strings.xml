@@ -18,4 +18,7 @@
     <string name="Find">Search new Devices / Cancel</string>
     <string name="title_activity_scan">ScanActivity</string>
 
+    <string name="connection_err">Connection error</string>
+    <string name="bt_support_err">Bluetooth not supported</string>
+
 </resources>
