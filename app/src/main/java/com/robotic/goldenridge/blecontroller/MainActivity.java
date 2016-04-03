@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.robotic.goldenridge.blecontroller.JoystickView.OnJoystickMoveListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity { //
     public static final int angleError =10;
 
     public static JoystickView joystick;
@@ -188,7 +188,8 @@ public class MainActivity extends AppCompatActivity {
         switch(id){
 
             case R.id.action_scan:
-                startActivity(new Intent(this,ScanActivity.class));
+                //startActivity(new Intent(this,ScanActivity.class));// old standard scan
+                startActivity(new Intent(this,DeviceScanActivity.class));
                 break;
             case R.id.action_settings:
                 break;

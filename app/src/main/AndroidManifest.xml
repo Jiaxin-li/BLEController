@@ -22,12 +22,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--standard blue tooth device-->
         <activity
             android:name=".ScanActivity"
             android:parentActivityName=".MainActivity"
             android:label="@string/title_activity_scan" >
-
         </activity>
+
+        <activity
+            android:name=".DeviceScanActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_activity_scan" >
+        </activity>
+
+        <service android:name=".BluetoothLeService" android:enabled="true"/>
     </application>
 
 </manifest>

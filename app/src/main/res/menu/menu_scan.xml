@@ -1,7 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.robotic.goldenridge.blecontroller.ScanActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    tools:context="com.robotic.goldenridge.blecontroller.DeviceScanActivity">
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="102"
+        android:showAsAction="never" />
+    <item android:id="@+id/menu_refresh"
+        android:checkable="false"
+        android:orderInCategory="1"
+        android:showAsAction="ifRoom"/>
+    <item android:id="@+id/menu_scan"
+        android:title="@string/menu_scan"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom|withText"/>
+    <item android:id="@+id/menu_stop"
+        android:title="@string/menu_stop"
+        android:orderInCategory="101"
+        android:showAsAction="ifRoom|withText"/>
 </menu>
