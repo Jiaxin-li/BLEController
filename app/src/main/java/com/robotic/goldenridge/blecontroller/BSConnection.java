@@ -1,21 +1,24 @@
+package com.robotic.goldenridge.blecontroller;
+
 /**
- * The bluetooth-arduino connection part uses code from the following site
- * https://bellcode.wordpress.com/2012/01/02/android-and-arduino-bluetooth-communication/
+ * Created by jiaxin on 4/4/2016.
+ * represent standard bluetooth connection
  */
 
-package com.robotic.goldenridge.blecontroller;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.util.UUID;
-import android.bluetooth.*;
-import android.util.Log;
 
 
-public class BluetoothConnection {
-    static boolean isLowenergy;
+
+
+public class BSConnection implements IBluetoothConnection {
+
     static BluetoothDevice MiDevice;
     static BluetoothSocket socket;
     BluetoothAdapter adapt;
@@ -34,7 +37,7 @@ public class BluetoothConnection {
     byte read[];
 
 
-    public BluetoothConnection(String address ){
+    public BSConnection(String address ){
         this.address = address;
         try {
             runBT();
@@ -69,7 +72,7 @@ public class BluetoothConnection {
             public void run() {
 
                 while(!Thread.currentThread().isInterrupted() && !stop) {
-                   // Log.d("DEC","running");
+                    // Log.d("DEC","running");
                     /* // place holder for receiving
                     try {
 
@@ -87,28 +90,34 @@ public class BluetoothConnection {
 
 
 
-// send compiled command
+    // send compiled command
     public void sendControlBytes(byte[] ctrl) {
         try {
             if (socket.isConnected()) {
-               out.write(ctrl);
+                out.write(ctrl);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void disconnect() {
+    @Override
+    public boolean connect() {
+        return false;
+    }
+
+    public boolean disconnect() {
 
         try {
             stop = true;
             out.close();
             in.close();
             socket.close();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return false;
     }
 
 

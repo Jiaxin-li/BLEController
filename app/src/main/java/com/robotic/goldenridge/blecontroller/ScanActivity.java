@@ -149,7 +149,7 @@ public class ScanActivity extends AppCompatActivity {
                     String devname = select.split("\n")[select.split("\n").length - 1];
                     Toast.makeText(getApplicationContext(), devname,
                             Toast.LENGTH_SHORT).show();
-                    MainActivity.btc = new BluetoothConnection(devname);
+                    MainActivity.btc = new BSConnection(devname);
                     text.setText("Connect to :" + MainActivity.btc.address);
                     connectBtn.setText(R.string.Disconnect );
                 }

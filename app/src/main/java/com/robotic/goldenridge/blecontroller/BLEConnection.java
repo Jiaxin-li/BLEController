@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by jiaxin on 4/4/2016.
  */
-public class BLEConnection {
+public class BLEConnection implements IBluetoothConnection {
     private final static String TAG = BLEConnection.class.getSimpleName();
     private String mDeviceName;
     private String mDeviceAddress;
@@ -97,12 +97,12 @@ public class BLEConnection {
         return intentFilter;
     }
 
-    private boolean connect(){
+    public boolean connect(){
         mBluetoothLeService.connect(mDeviceAddress);
         return true;
     }
 
-    boolean disconnect(){
+    public boolean disconnect(){
         mBluetoothLeService.disconnect();
         return true;
 

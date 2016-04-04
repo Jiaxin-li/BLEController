@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity { //
     public static final int angleError =10;
 
     public static JoystickView joystick;
-    public static BluetoothConnection btc = null ;
+    public static BSConnection btc = null ;
     //test for BLE
     public static BLEConnection blc = null;
     public static Context mContext;
