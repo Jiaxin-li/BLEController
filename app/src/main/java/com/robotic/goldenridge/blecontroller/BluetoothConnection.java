@@ -15,6 +15,7 @@ import android.util.Log;
 
 
 public class BluetoothConnection {
+    static boolean isLowenergy;
     static BluetoothDevice MiDevice;
     static BluetoothSocket socket;
     BluetoothAdapter adapt;

@@ -18,6 +18,9 @@ public class MainActivity extends AppCompatActivity { //
 
     public static JoystickView joystick;
     public static BluetoothConnection btc = null ;
+    //test for BLE
+    public static BLEConnection blc = null;
+
     public static TextView stv;
     public static TextView tvsteer;
     public static TextView tvspeed;
@@ -105,11 +108,13 @@ public class MainActivity extends AppCompatActivity { //
                 tvright.setText(String.valueOf(RPWM));
                 tvleft.setText(String.valueOf(LPWM));
                 tvcmd.setText(MessageHandler.bytesToHex(cmdBytes));
-
+                /* // standard bluetooth
                 if (btc != null) {
                     //btc.sendString(angle + "," + power + "\n");//use plain String to send control
                     btc.sendControlBytes(cmdBytes);
-
+                }*/
+                if(blc != null){
+                    blc.sendControlBytes(cmdBytes);
                 }
 
 
@@ -133,7 +138,7 @@ public class MainActivity extends AppCompatActivity { //
                 byte[] startcmd = {(byte) 0x80}; // start OI
                 byte[] safemod ={(byte)0x83}; // turn into safe mode
                 byte[] stopcmd ={(byte)0xAD}; // stop OI
-
+                /*
                 if (btc != null) {
                     if(OIstatus){// turn off
                         btc.sendControlBytes(stopcmd);
@@ -148,7 +153,21 @@ public class MainActivity extends AppCompatActivity { //
                         startbtn.setImageResource(android.R.drawable.button_onoff_indicator_on);
                         OIstatus =true;
                     }
-
+                    */
+                if (blc != null) {
+                    if(OIstatus){// turn off
+                        blc.sendControlBytes(stopcmd);
+                        startbtn.setImageResource(android.R.drawable.button_onoff_indicator_off);
+                        OIstatus =false;
+                    }
+                    else { //turn on
+                        blc.sendControlBytes(startcmd);
+                        //tvcmd.setText(MessageHandler.bytesToHex(startcmd));
+                        blc.sendControlBytes(safemod);
+                        //tvcmd.setText(MessageHandler.bytesToHex(safemod));
+                        startbtn.setImageResource(android.R.drawable.button_onoff_indicator_on);
+                        OIstatus =true;
+                    }
                 } else {
                     Toast.makeText(MainActivity.this,R.string.connection_err, Toast.LENGTH_SHORT).show();
 
