@@ -1,6 +1,7 @@
 package com.robotic.goldenridge.blecontroller;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity { //
     public static BluetoothConnection btc = null ;
     //test for BLE
     public static BLEConnection blc = null;
+    public static Context mContext;
 
     public static TextView stv;
     public static TextView tvsteer;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity { //
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        mContext= this.getApplicationContext();
         stv= (TextView)findViewById(R.id.statusView);
         tvspeed = (TextView) findViewById(R.id.speed_value);
         tvsteer = (TextView) findViewById(R.id.steer_value);
@@ -51,6 +54,8 @@ public class MainActivity extends AppCompatActivity { //
         soundbtns[2]= (ImageButton) findViewById(R.id.soundbtn2);
         soundbtns[3]= (ImageButton) findViewById(R.id.soundbtn3);
 
+        // test for BLE
+        startService(new Intent(getBaseContext(), BluetoothLeService.class));
 
         addListenerOnButtons();
 
@@ -136,8 +141,8 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public void onClick(View arg0) {
                 byte[] startcmd = {(byte) 0x80}; // start OI
-                byte[] safemod ={(byte)0x83}; // turn into safe mode
-                byte[] stopcmd ={(byte)0xAD}; // stop OI
+                byte[] safemod = {(byte) 0x83}; // turn into safe mode
+                byte[] stopcmd = {(byte) 0xAD}; // stop OI
                 /*
                 if (btc != null) {
                     if(OIstatus){// turn off
@@ -155,21 +160,20 @@ public class MainActivity extends AppCompatActivity { //
                     }
                     */
                 if (blc != null) {
-                    if(OIstatus){// turn off
+                    if (OIstatus) {// turn off
                         blc.sendControlBytes(stopcmd);
                         startbtn.setImageResource(android.R.drawable.button_onoff_indicator_off);
-                        OIstatus =false;
-                    }
-                    else { //turn on
+                        OIstatus = false;
+                    } else { //turn on
                         blc.sendControlBytes(startcmd);
                         //tvcmd.setText(MessageHandler.bytesToHex(startcmd));
                         blc.sendControlBytes(safemod);
                         //tvcmd.setText(MessageHandler.bytesToHex(safemod));
                         startbtn.setImageResource(android.R.drawable.button_onoff_indicator_on);
-                        OIstatus =true;
+                        OIstatus = true;
                     }
                 } else {
-                    Toast.makeText(MainActivity.this,R.string.connection_err, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.connection_err, Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -218,6 +222,14 @@ public class MainActivity extends AppCompatActivity { //
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(getBaseContext(), BluetoothLeService.class));
+    }
+
+
 
 
 }

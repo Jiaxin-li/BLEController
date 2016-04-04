@@ -152,7 +152,7 @@ public class DeviceScanActivity extends ListActivity {
 
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
         if (device == null) return;
-        MainActivity.blc = new BLEConnection(device.getAddress());
+        MainActivity.blc = new BLEConnection(device.getAddress(),MainActivity.mContext);
         if (mScanning) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
