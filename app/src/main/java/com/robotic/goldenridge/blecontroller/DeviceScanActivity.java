@@ -32,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,7 +41,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 /**
- * Activity for scanning and displaying available Bluetooth LE devices.
+ * Activity for scanning and displaying available Bluetooth LE and Standard devices.
  */
 public class DeviceScanActivity extends ListActivity {
     private LeDeviceListAdapter mLeDeviceListAdapter;
@@ -48,7 +49,7 @@ public class DeviceScanActivity extends ListActivity {
     private boolean leScanning;
     private Handler mHandler;
     //integrating standard scanning
-    private boolean sScanning;
+    private ArrayAdapter<String> BTArrayAdapter;
 
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
@@ -63,10 +64,13 @@ public class DeviceScanActivity extends ListActivity {
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
-            finish();
+        if(IBluetoothConnection.isLE){
+            if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+                Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
+
 
         // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
         // BluetoothAdapter through BluetoothManager.
@@ -102,11 +106,11 @@ public class DeviceScanActivity extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_scan:
-                mLeDeviceListAdapter.clear();
-                scanLeDevice(true);
+                clearListAdapter();
+                setscanatate(true);
                 break;
             case R.id.menu_stop:
-                scanLeDevice(false);
+                setscanatate(false);
                 break;
         }
         return true;
@@ -126,9 +130,17 @@ public class DeviceScanActivity extends ListActivity {
         }
 
         // Initializes list view adapter.
-        mLeDeviceListAdapter = new LeDeviceListAdapter();
-        setListAdapter(mLeDeviceListAdapter);
-        scanLeDevice(true);
+        if(IBluetoothConnection.isLE){
+            mLeDeviceListAdapter = new LeDeviceListAdapter();
+            setListAdapter(mLeDeviceListAdapter);
+
+        }
+        else{
+            BTArrayAdapter = new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1);
+            setListAdapter(BTArrayAdapter);
+        }
+        setscanatate(true);
+
     }
 
     @Override
@@ -144,8 +156,8 @@ public class DeviceScanActivity extends ListActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        scanLeDevice(false);
-        mLeDeviceListAdapter.clear();
+        setscanatate(false);
+        clearListAdapter();
     }
 
     @Override
@@ -168,6 +180,24 @@ public class DeviceScanActivity extends ListActivity {
         NavUtils.navigateUpFromSameTask(this);
     }
 
+    private void clearListAdapter(){
+        if(mLeDeviceListAdapter!= null){
+            mLeDeviceListAdapter.clear();
+        }
+        if(BTArrayAdapter!=null){
+            BTArrayAdapter.clear();
+        }
+    }
+
+    private void setscanatate(boolean state){
+        if(IBluetoothConnection.isLE){
+            scanLeDevice(state);
+        }
+        else{
+            scanStandardDevice(state);
+        }
+    }
+
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             // Stops scanning after a pre-defined scan period.
@@ -188,6 +218,29 @@ public class DeviceScanActivity extends ListActivity {
         }
         invalidateOptionsMenu();
     }
+
+    private void scanStandardDevice(final boolean enable) {
+        if (enable) {
+            // Stops scanning after a pre-defined scan period.
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    leScanning = false;
+                    mBluetoothAdapter.cancelDiscovery();
+                    invalidateOptionsMenu();
+                }
+            }, SCAN_PERIOD);
+
+            leScanning = true;
+            mBluetoothAdapter.startDiscovery();
+        } else {
+            leScanning = false;
+            mBluetoothAdapter.cancelDiscovery();
+        }
+        invalidateOptionsMenu();
+    }
+
+
 
     // Adapter for holding devices found through scanning.
     private class LeDeviceListAdapter extends BaseAdapter {
