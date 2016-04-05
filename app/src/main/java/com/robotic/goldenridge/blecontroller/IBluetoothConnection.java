@@ -5,7 +5,7 @@
 
 package com.robotic.goldenridge.blecontroller;
 public interface IBluetoothConnection{
-    public boolean isLE = true;
+
     public void sendControlBytes(byte[] ctrl) ;
 
     public boolean connect();

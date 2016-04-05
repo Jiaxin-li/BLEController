@@ -23,11 +23,6 @@
             </intent-filter>
         </activity>
         <!--standard blue tooth device-->
-        <activity
-            android:name=".ScanActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/title_activity_scan" >
-        </activity>
 
         <activity
             android:name=".DeviceScanActivity"

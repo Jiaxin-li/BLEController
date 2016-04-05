@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.google.protobuf.InvalidProtocolBufferException;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +22,60 @@ public class MessageHandler {
     // place holder
     }
 
+    public static void startcmd(){
+        byte[] startcmd = {(byte) 0x80}; // start OI
+        byte[] safemod = {(byte) 0x83}; // turn into safe mode
+        // standard bluetooth
+        if (!MainActivity.isLE && MainActivity.btc != null) {
+            MainActivity.btc.sendControlBytes(startcmd);
+            MainActivity.btc.sendControlBytes(safemod);
+        }
+        // BLE
+        else if(MainActivity.isLE && MainActivity.blc != null){
+            MainActivity.blc.sendControlBytes(startcmd);
+            MainActivity.blc.sendControlBytes(safemod);
+        }
+
+        else {
+                        // exception
+
+        }
+    }
+
+
+    public static void stopcmd(){
+        byte[] stopcmd = {(byte) 0xAD}; // stop OI
+        // standard bluetooth
+        if (!MainActivity.isLE && MainActivity.btc != null) {
+            MainActivity.btc.sendControlBytes(stopcmd);
+        }
+        // BLE
+        else if(MainActivity.isLE && MainActivity.blc != null){
+            MainActivity.blc.sendControlBytes(stopcmd);
+        }
+
+        else {
+            // exception
+
+        }
+    }
+
+
+    public static void drivePWM(int RPWM,int LPWM){
+        byte[] PWMcmd = PWMcmd(RPWM, LPWM);
+         // standard bluetooth
+                if (!MainActivity.isLE && MainActivity.btc != null) {
+                    //btc.sendString(angle + "," + power + "\n");//use plain String to send control
+                    MainActivity.btc.sendControlBytes(PWMcmd);
+                }
+        // BLE
+                else if(MainActivity.isLE && MainActivity.blc != null){
+                    MainActivity.blc.sendControlBytes(PWMcmd);
+                }
+                else{ // throw exception
+
+                }
+    }
     //generate Drive PWM cmd OPCode 146
     public static byte[] PWMcmd(int RPWM,int LPWM){
         byte[] cmd  = new byte[5];

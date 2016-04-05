@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity { //
     public static JoystickView joystick;
     public static BSConnection btc = null ;
     //test for BLE
+    public static boolean isLE = true;
     public static BLEConnection blc = null;
     public static Context mContext;
 
@@ -30,7 +31,9 @@ public class MainActivity extends AppCompatActivity { //
     public static TextView tvright;
     public static TextView tvcmd;
     public static ImageButton startbtn;
-    public static ImageButton[] soundbtns;
+    public static ImageButton btbtn;
+    public static ImageButton joysticbtn;
+    public static ImageButton soundbtn;
 
     private final double RAD = 57.2957795;
     private byte[] cmdBytes;
@@ -48,11 +51,10 @@ public class MainActivity extends AppCompatActivity { //
         tvright = (TextView) findViewById(R.id.rear_value);
         tvcmd =  (TextView) findViewById(R.id.decode_value);
         startbtn = (ImageButton) findViewById(R.id.startbtn);
-        soundbtns = new ImageButton[4];
-        soundbtns[0]= (ImageButton) findViewById(R.id.soundbtn0);
-        soundbtns[1]= (ImageButton) findViewById(R.id.soundbtn1);
-        soundbtns[2]= (ImageButton) findViewById(R.id.soundbtn2);
-        soundbtns[3]= (ImageButton) findViewById(R.id.soundbtn3);
+        btbtn= (ImageButton) findViewById(R.id.bluetoothbtn);
+        joysticbtn= (ImageButton) findViewById(R.id.joysticbtn);
+        soundbtn= (ImageButton) findViewById(R.id.soundbtn);
+
 
         // test for BLE
         startService(new Intent(getBaseContext(), BluetoothLeService.class));
@@ -106,23 +108,15 @@ public class MainActivity extends AppCompatActivity { //
                     RPWM = power ;
                     LPWM = (int) (power * Math.cos(angleRad));
                 }
-                cmdBytes = MessageHandler.PWMcmd(RPWM,LPWM);
+                // logical independent solution
+                MessageHandler.drivePWM(RPWM,LPWM);
+                //cmdBytes = MessageHandler.PWMcmd(RPWM,LPWM);
 
-                tvspeed.setText(String.valueOf(power));
-                tvsteer.setText(String.valueOf(angle));
-                tvright.setText(String.valueOf(RPWM));
-                tvleft.setText(String.valueOf(LPWM));
-                tvcmd.setText(MessageHandler.bytesToHex(cmdBytes));
-                /* // standard bluetooth
-                if (btc != null) {
-                    //btc.sendString(angle + "," + power + "\n");//use plain String to send control
-                    btc.sendControlBytes(cmdBytes);
-                }*/
-                if(blc != null){
-                    blc.sendControlBytes(cmdBytes);
-                }
-
-
+                //tvspeed.setText(String.valueOf(power));
+                //tvsteer.setText(String.valueOf(angle));
+                //tvright.setText(String.valueOf(RPWM));
+                //tvleft.setText(String.valueOf(LPWM));
+                //tvcmd.setText(MessageHandler.bytesToHex(cmdBytes));
             }
         }, JoystickView.DEFAULT_LOOP_INTERVAL);
 
@@ -140,66 +134,33 @@ public class MainActivity extends AppCompatActivity { //
         startbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                byte[] startcmd = {(byte) 0x80}; // start OI
-                byte[] safemod = {(byte) 0x83}; // turn into safe mode
-                byte[] stopcmd = {(byte) 0xAD}; // stop OI
-                /*
-                if (btc != null) {
-                    if(OIstatus){// turn off
-                        btc.sendControlBytes(stopcmd);
-                        startbtn.setImageResource(android.R.drawable.button_onoff_indicator_off);
-                        OIstatus =false;
-                    }
-                    else { //turn on
-                        btc.sendControlBytes(startcmd);
-                        //tvcmd.setText(MessageHandler.bytesToHex(startcmd));
-                        btc.sendControlBytes(safemod);
-                        //tvcmd.setText(MessageHandler.bytesToHex(safemod));
-                        startbtn.setImageResource(android.R.drawable.button_onoff_indicator_on);
-                        OIstatus =true;
-                    }
-                    */
-                if (blc != null) {
-                    if (OIstatus) {// turn off
-                        blc.sendControlBytes(stopcmd);
-                        startbtn.setImageResource(android.R.drawable.button_onoff_indicator_off);
-                        OIstatus = false;
-                    } else { //turn on
-                        blc.sendControlBytes(startcmd);
-                        //tvcmd.setText(MessageHandler.bytesToHex(startcmd));
-                        blc.sendControlBytes(safemod);
-                        //tvcmd.setText(MessageHandler.bytesToHex(safemod));
-                        startbtn.setImageResource(android.R.drawable.button_onoff_indicator_on);
-                        OIstatus = true;
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, R.string.connection_err, Toast.LENGTH_SHORT).show();
-
+                if (OIstatus) {// turn off
+                    MessageHandler.stopcmd();
+                    startbtn.setImageResource(R.drawable.ic_key_black_24dp);
+                    OIstatus = false;
+                } else { //turn on
+                    MessageHandler.startcmd();
+                    startbtn.setImageResource(R.drawable.ic_key_white_24dp);
+                    OIstatus = true;
                 }
-
             }
-
         });
-        for(int i=0;i<4;i++ ){
-            final byte helper = (byte)i; // annoying inner claas can't access non-final value of outer class!
-            soundbtns[i].setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View arg0) {
-                    if (btc != null) {
-                        byte[] soundcmd = {(byte) 0x8D, helper };
-                        btc.sendControlBytes(soundcmd);
-                        tvcmd.setText(MessageHandler.bytesToHex(soundcmd));
-                    } else {
-                        Toast.makeText(MainActivity.this,R.string.connection_err, Toast.LENGTH_SHORT).show();
-                    }
+        btbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if (isLE) {// set bluetooth to standard connection
+                   isLE = false;
+                    btbtn.setImageResource(R.drawable.ic_bluetooth_settings_white_24dp);
+
+                } else { //set bluetooth to low energy
+                   isLE = true;
+                    btbtn.setImageResource(R.drawable.ic_bluetooth_settings_black_24dp);
 
                 }
-
-            });
-        }
-        }
-
+            }
+        });
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -211,7 +172,6 @@ public class MainActivity extends AppCompatActivity { //
         switch(id){
 
             case R.id.action_scan:
-                //startActivity(new Intent(this,ScanActivity.class));// old standard scan
                 startActivity(new Intent(this,DeviceScanActivity.class));
                 break;
             case R.id.action_settings:
