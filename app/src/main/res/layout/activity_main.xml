@@ -9,110 +9,102 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout">
+        android:id="@+id/linearLayout"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_centerHorizontal="true">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView android:text="@string/speed_label" android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-                android:id="@+id/textView"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/init_value"
-                android:id="@+id/speed_value"
-                android:layout_alignParentTop="true"
-                android:layout_alignRight="@+id/joystickView"
-                android:layout_alignEnd="@+id/joystickView" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
+        <TableLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/dialpad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/joystickView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
 
-            <TextView android:text="@string/steering_label" android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView"
-                android:layout_alignLeft="@+id/textView"
-                android:layout_alignStart="@+id/textView"
-                android:id="@+id/textView3" />
+            android:layout_gravity="center"
+            android:layout_marginTop="0px"
+            android:paddingLeft="5dip"
+            android:paddingRight="5dip"
+            android:paddingBottom="10dip"
+            >
+            <TableRow
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:layout_gravity="center">
+                <ImageButton
+                    android:id="@+id/leftcurve"
+                    android:src="@drawable/ic_reply_black_48dp"
+                     />
+                <ImageButton
+                    android:id="@+id/strait"
+                    android:src="@drawable/ic_arrow_up_bold_black_48dp"
+                    android:layout_gravity="center_horizontal" />
+                <ImageButton
+                    android:id="@+id/rightcurve"
+                    android:src="@drawable/ic_share_black_48dp"
+                    />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/startbtn"
+                    android:src="@drawable/ic_key_black_48dp"
+                    android:layout_toRightOf="@+id/rightcurve"
+                     />
+            </TableRow>
+            <TableRow
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal">
+                <ImageButton
+                    android:id="@+id/anticlock"
+                    android:src="@drawable/ic_replay_black_48dp"
+                     />
+                <ImageButton
+                    android:id="@+id/park"
+                    android:src="@drawable/ic_pandora_black_48dp"
+                     />
+                <ImageButton
+                    android:id="@+id/clock"
+                    android:src="@drawable/ic_refresh_black_48dp"
+                     />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bluetoothbtn"
+                    android:src="@drawable/ic_bluetooth_settings_black_48dp"
+                    android:layout_toRightOf="@+id/clock"
+                     />
+            </TableRow>
+            <TableRow
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal">
+                <ImageButton
+                    android:id="@+id/backleft"
+                    android:src="@drawable/ic_arrow_left_bold_black_48dp"
+                     />
+                <ImageButton
+                    android:id="@+id/back"
+                    android:src="@drawable/ic_arrow_down_bold_black_48dp"
+                     />
+                <ImageButton
+                    android:id="@+id/backright"
+                    android:src="@drawable/ic_arrow_right_bold_black_48dp"
+                    />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/soundbtn"
+                    android:src="@drawable/ic_bullhorn_black_48dp"
+                    android:layout_toRightOf="@+id/backright"
+                    />
+            </TableRow>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/init_value"
-                android:id="@+id/steer_value"
-                android:layout_alignBaseline="@+id/textView3"
-                android:layout_alignBottom="@+id/textView3"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-
-        </LinearLayout>
+        </TableLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/front_sonar_label"
-                android:id="@+id/frontView" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/init_value"
-                android:id="@+id/front_value" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rear_sonar_label"
-                android:id="@+id/rearView" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/init_value"
-                android:id="@+id/rear_value" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/decode_label"
-                android:id="@+id/statusView" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/init_value"
-                android:id="@+id/decode_value" />
-        </LinearLayout>
-
+            android:layout_height="match_parent"></LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -124,36 +116,19 @@
         android:layout_alignParentStart="true"
         android:id="@+id/linearLayout2">
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/startbtn"
-            android:src="@drawable/ic_key_black_24dp"
-            android:layout_gravity="center" />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/bluetoothbtn"
-            android:src="@drawable/ic_bluetooth_settings_black_24dp"
-            android:layout_toRightOf="@+id/startbtn"
-            android:layout_gravity="center" />
 
+
+<!--
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/joysticbtn"
-            android:src="@drawable/ic_gamepad_black_24dp"
+            android:src="@drawable/ic_gamepad_black_48dp"
             android:layout_toRightOf="@+id/bluetoothbtn"
             android:layout_gravity="center"/>
+-->
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/soundbtn"
-            android:src="@drawable/ic_bullhorn_black_24dp"
-            android:layout_toRightOf="@+id/joysticbtn"
-            android:layout_gravity="center"/>
     </LinearLayout>
 
     <com.robotic.goldenridge.blecontroller.JoystickView

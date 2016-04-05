@@ -44,15 +44,11 @@ public class MainActivity extends AppCompatActivity { //
 
         setContentView(R.layout.activity_main);
         mContext= this.getApplicationContext();
-        stv= (TextView)findViewById(R.id.statusView);
-        tvspeed = (TextView) findViewById(R.id.speed_value);
-        tvsteer = (TextView) findViewById(R.id.steer_value);
-        tvleft = (TextView) findViewById(R.id.front_value);
-        tvright = (TextView) findViewById(R.id.rear_value);
-        tvcmd =  (TextView) findViewById(R.id.decode_value);
+
+
         startbtn = (ImageButton) findViewById(R.id.startbtn);
         btbtn= (ImageButton) findViewById(R.id.bluetoothbtn);
-        joysticbtn= (ImageButton) findViewById(R.id.joysticbtn);
+        //joysticbtn= (ImageButton) findViewById(R.id.joysticbtn);
         soundbtn= (ImageButton) findViewById(R.id.soundbtn);
 
 
@@ -110,13 +106,7 @@ public class MainActivity extends AppCompatActivity { //
                 }
                 // logical independent solution
                 MessageHandler.drivePWM(RPWM,LPWM);
-                //cmdBytes = MessageHandler.PWMcmd(RPWM,LPWM);
 
-                //tvspeed.setText(String.valueOf(power));
-                //tvsteer.setText(String.valueOf(angle));
-                //tvright.setText(String.valueOf(RPWM));
-                //tvleft.setText(String.valueOf(LPWM));
-                //tvcmd.setText(MessageHandler.bytesToHex(cmdBytes));
             }
         }, JoystickView.DEFAULT_LOOP_INTERVAL);
 
