@@ -1,0 +1,10 @@
+<preference-headers
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header android:fragment="com.robotic.goldenridge.blecontroller.UserSettingActivity$Prefs1Fragment"
+        android:icon="@drawable/ic_bluetooth_settings_black_24dp"
+        android:title="Prefs 1"
+        android:summary="An example of some preferences." />
+
+
+</preference-headers>

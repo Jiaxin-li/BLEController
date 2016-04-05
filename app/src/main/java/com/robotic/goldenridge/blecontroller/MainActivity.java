@@ -24,12 +24,9 @@ public class MainActivity extends AppCompatActivity { //
     public static BLEConnection blc = null;
     public static Context mContext;
 
-    public static TextView stv;
-    public static TextView tvsteer;
-    public static TextView tvspeed;
-    public static TextView tvleft;
-    public static TextView tvright;
-    public static TextView tvcmd;
+    // for settings
+    private static final int RESULT_SETTINGS = 1;
+
     public static ImageButton startbtn;
     public static ImageButton btbtn;
     public static ImageButton joysticbtn;
@@ -165,6 +162,8 @@ public class MainActivity extends AppCompatActivity { //
                 startActivity(new Intent(this,DeviceScanActivity.class));
                 break;
             case R.id.action_settings:
+                Intent i = new Intent(this, UserSettingActivity.class);
+                startActivityForResult(i, RESULT_SETTINGS);
                 break;
             default:
 

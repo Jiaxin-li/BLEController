@@ -30,6 +30,12 @@
             android:label="@string/title_activity_scan" >
         </activity>
 
+        <activity
+            android:name=".UserSettingActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/action_settings" >
+        </activity>
+
         <service android:name=".BluetoothLeService" android:enabled="true"/>
     </application>
 

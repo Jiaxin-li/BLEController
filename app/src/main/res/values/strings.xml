@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">BLEController</string>
-    <string name="speed_label">Speed: </string>
-    <string name="front_sonar_label">LEFT ENC: </string>
-    <string name="rear_sonar_label">RIGHT ENC: </string>
-    <string name="decode_label">CMD: </string>
+
     <string name="init_value">N/A</string>
     <string name="steering_label">Steering: </string>
     <string name="action_settings">Settings</string>
@@ -25,4 +22,5 @@
     <string name="menu_stop">Stop</string>
     <string name="unknown_device">Unknown Device</string>
     <string name="unknown_service">Unknown service</string>
+
 </resources>
