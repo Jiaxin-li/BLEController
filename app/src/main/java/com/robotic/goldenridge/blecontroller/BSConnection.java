@@ -50,7 +50,6 @@ public class BSConnection implements IBluetoothConnection {
 
     }
     public void runBT() throws IOException, NullPointerException {
-
         //opens connection
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); //Standard SerialPortService ID 00001101-0000-1000-8000-00805F9B34FB
 

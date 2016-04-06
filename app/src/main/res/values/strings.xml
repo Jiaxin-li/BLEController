@@ -1,26 +1,21 @@
 <resources>
     <string name="app_name">BLEController</string>
-
     <string name="init_value">N/A</string>
-    <string name="steering_label">Steering: </string>
     <string name="action_settings">Settings</string>
     <string name="activity_scan">Scan Available Device </string>
-    <string name="scan_btn">Scan</string>
-    <string name="title_devices">BLE Device Scan</string>
-    <string name="stop_scan">Stop Scanning</string>
-    <string name="decode_error">DECODE ERROR</string>
-    <string name="decode_success">DECODE SUCCESS</string>
-    <string name="Connect">Connect</string>
-    <string name="Disconnect">Disconnect</string>
-    <string name="Find">Search new Devices / Cancel</string>
     <string name="title_activity_scan">ScanActivity</string>
-    <string name="error_bluetooth_not_supported">Bluetooth NOT supported.</string>
     <string name="ble_not_supported">BLE is not supported</string>
     <string name="connection_err">Connection error</string>
-    <string name="bt_support_err">Bluetooth not supported</string>
+    <string name="bt_support_err">Bluetooth NOT supported</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
     <string name="unknown_device">Unknown Device</string>
     <string name="unknown_service">Unknown service</string>
 
+    <string name="bluetooth_setting">Bluetooth Setting</string>
+    <string name="bluetooth_summary">Connect to Bluetooth Lowenergy Device</string>
+    <string name="speed_setting">Velocity</string>
+    <string name="speed_summary">Set Move speed for Robot (0-500 mm/s)</string>
+    <string name="radius_setting">Radius</string>
+    <string name="radius_summary">Set turning radious for Robot (0-2000 mm/s)</string>
 </resources>

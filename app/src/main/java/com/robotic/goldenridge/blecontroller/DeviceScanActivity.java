@@ -72,7 +72,7 @@ public class DeviceScanActivity extends ListActivity {
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
-        if(MainActivity.isLE){
+        if(MainActivity.isLE()){
             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                 Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
                 finish();
@@ -88,7 +88,7 @@ public class DeviceScanActivity extends ListActivity {
 
         // Checks if Bluetooth is supported on the device.
         if (mBluetoothAdapter == null) {
-            Toast.makeText(this, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.bt_support_err, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -141,7 +141,7 @@ public class DeviceScanActivity extends ListActivity {
         }
 
         // Initializes list view adapter.
-        if(MainActivity.isLE){
+        if(MainActivity.isLE()){
             mLeDeviceListAdapter = new LeDeviceListAdapter();
             setListAdapter(mLeDeviceListAdapter);
 
@@ -175,7 +175,7 @@ public class DeviceScanActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         //// TODO: 4/3/2016
         Log.d(TAG,"listItem clicked");// DEBUG can't be reached when in standard mode
-        if(MainActivity.isLE){ //LEDevice
+        if(MainActivity.isLE()){ //LEDevice
              device= mLeDeviceListAdapter.getDevice(position);
             if (device == null) return;
             MainActivity.blc = new BLEConnection(device.getAddress(),MainActivity.mContext);
@@ -210,7 +210,7 @@ public class DeviceScanActivity extends ListActivity {
     }
 
     private void setscanatate(boolean state){
-        if(MainActivity.isLE){
+        if(MainActivity.isLE()){
             scanLeDevice(state);
         }
         else{

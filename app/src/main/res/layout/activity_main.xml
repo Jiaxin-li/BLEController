@@ -31,15 +31,15 @@
                 android:layout_weight="1"
                 android:layout_gravity="center">
                 <ImageButton
-                    android:id="@+id/leftcurve"
+                    android:id="@+id/forwardLeft"
                     android:src="@drawable/ic_reply_black_48dp"
                      />
                 <ImageButton
-                    android:id="@+id/strait"
+                    android:id="@+id/forward"
                     android:src="@drawable/ic_arrow_up_bold_black_48dp"
                     android:layout_gravity="center_horizontal" />
                 <ImageButton
-                    android:id="@+id/rightcurve"
+                    android:id="@+id/forwardRight"
                     android:src="@drawable/ic_share_black_48dp"
                     />
                 <ImageButton
@@ -55,23 +55,23 @@
                 android:layout_weight="1"
                 android:layout_gravity="center_horizontal">
                 <ImageButton
-                    android:id="@+id/anticlock"
+                    android:id="@+id/ccw"
                     android:src="@drawable/ic_replay_black_48dp"
                      />
                 <ImageButton
                     android:id="@+id/park"
-                    android:src="@drawable/ic_pandora_black_48dp"
+                    android:src="@drawable/ic_battery_charging_100_black_48dp"
                      />
                 <ImageButton
-                    android:id="@+id/clock"
+                    android:id="@+id/cw"
                     android:src="@drawable/ic_refresh_black_48dp"
                      />
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/bluetoothbtn"
-                    android:src="@drawable/ic_bluetooth_settings_black_48dp"
-                    android:layout_toRightOf="@+id/clock"
+                    android:id="@+id/path"
+                    android:src="@drawable/ic_vector_polyline_black_48dp"
+                    android:layout_toRightOf="@+id/cw"
                      />
             </TableRow>
             <TableRow
@@ -80,7 +80,7 @@
                 android:layout_gravity="center_horizontal">
                 <ImageButton
                     android:id="@+id/backleft"
-                    android:src="@drawable/ic_arrow_left_bold_black_48dp"
+                    android:src="@drawable/ic_backleft_black_48dp"
                      />
                 <ImageButton
                     android:id="@+id/back"
@@ -88,7 +88,7 @@
                      />
                 <ImageButton
                     android:id="@+id/backright"
-                    android:src="@drawable/ic_arrow_right_bold_black_48dp"
+                    android:src="@drawable/ic_backright_black_48dp"
                     />
                 <ImageButton
                     android:layout_width="wrap_content"
