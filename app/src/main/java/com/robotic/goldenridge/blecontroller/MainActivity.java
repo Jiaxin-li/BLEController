@@ -295,15 +295,11 @@ public class MainActivity extends AppCompatActivity { //
 
     public static int getSpeed(){
         // constrain the value from 0 - 500
-        //return constrain(prefs.getInt("speed", 0),0,500);
-        //int i = prefs.getInt("speed", 0);
-
-        return 100;
+        return constrain(Integer.valueOf(prefs.getString("speed", "0")),0,500);
     }
 
-    public static int getRadius(){
-        //return constrain(prefs.getInt("radius", 0), 0, 2000);
-        return 1000;
+    public static int getRadius(){ // getInt() Throws ClassCastException if there is a preference with this name that is not an int.
+        return constrain(Integer.valueOf(prefs.getString("radius", "100")), 0, 2000);
     }
     private static int constrain(int ori, int min, int max){
         if( ori < min) ori = min;

@@ -14,9 +14,9 @@
         <PreferenceCategory
             android:title="@string/speed_setting">
             <EditTextPreference
-                android:key="@string/speed_setting"
+                android:key="speed"
                 android:inputType="number"
-                android:defaultValue="100"
+
                 android:summary="@string/speed_summary">
 
             </EditTextPreference>
@@ -27,7 +27,7 @@
             <EditTextPreference
                 android:key="radius"
                 android:inputType="number"
-                android:defaultValue="100"
+
                 android:summary="@string/radius_summary">
 
             </EditTextPreference>
