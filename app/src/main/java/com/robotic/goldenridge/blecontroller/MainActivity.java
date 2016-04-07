@@ -1,10 +1,15 @@
 package com.robotic.goldenridge.blecontroller;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +26,7 @@ import com.robotic.goldenridge.blecontroller.JoystickView.OnJoystickMoveListener
 public class MainActivity extends AppCompatActivity { //
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int angleError =10;
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 9;
 
     public static JoystickView joystick;
     public static BSConnection btc = null ;
@@ -69,6 +75,24 @@ public class MainActivity extends AppCompatActivity { //
         backwardLeft = (ImageButton) findViewById(R.id.backleft);
         back = (ImageButton) findViewById(R.id.back);
         backwardRight = (ImageButton) findViewById(R.id.backright);
+
+
+        // test for permission over Android M
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android M Permission check 
+            if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("This app needs connect to BLE Device");
+                builder.setMessage("Please grant location access so this app.");
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    public void onDismiss(DialogInterface dialog) {
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+                    }
+                });
+                builder.show();
+            }
+        }
 
 
         // test for BLE
@@ -306,6 +330,31 @@ public class MainActivity extends AppCompatActivity { //
         if( ori > max ) ori = max;
         return ori;
     }
+
+
+    // test for permission
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_COARSE_LOCATION: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "coarse location permission granted");
+                } else {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Functionality limited");
+                    builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons when in the background.");
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                        }
+                    });
+                    builder.show();
+                }
+                return;
+            }
+        }
+    }
+
 
     @Override
     public void onDestroy() {
