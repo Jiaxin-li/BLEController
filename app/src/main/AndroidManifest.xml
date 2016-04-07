@@ -36,6 +36,12 @@
             android:label="@string/action_settings" >
         </activity>
 
+        <activity
+            android:name=".PathPlanActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_activity_path" >
+        </activity>
+
         <service android:name=".BluetoothLeService" android:enabled="true"/>
     </application>
 

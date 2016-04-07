@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity { //
     private  ImageButton back;
     private  ImageButton backwardRight;
     private  ImageButton dock;
+    private  ImageButton pathbtn;
 
 
 
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity { //
         backwardLeft = (ImageButton) findViewById(R.id.backleft);
         back = (ImageButton) findViewById(R.id.back);
         backwardRight = (ImageButton) findViewById(R.id.backright);
+        pathbtn = (ImageButton) findViewById(R.id.path);
 
 
         // test for BLE
@@ -153,6 +155,13 @@ public class MainActivity extends AppCompatActivity { //
                     startbtn.setImageResource(R.drawable.ic_key_white_48dp);
                     OIstatus = true;
                 }
+            }
+        });
+
+        pathbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                startActivity(new Intent(MainActivity.mContext,PathPlanActivity.class));
             }
         });
 

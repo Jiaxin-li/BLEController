@@ -18,4 +18,7 @@
     <string name="speed_summary">Set Move speed for Robot (0-500 mm/s)</string>
     <string name="radius_setting">Radius</string>
     <string name="radius_summary">Set turning radious for Robot (0-2000 mm/s)</string>
+
+    <string name="title_activity_path">path</string>
+
 </resources>
