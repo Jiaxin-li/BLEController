@@ -62,7 +62,7 @@ public class BluetoothLeService extends Service {
     public final static String EXTRA_DATA =
             "com.robotic.goldenridge.bluetooth.le.EXTRA_DATA";
     public final static UUID UUID_HM_RX_TX =
-            UUID.fromString(GattAttributes.RX_TX);
+            UUID.fromString(BLEConnection.RX_TX);
 
     
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -300,7 +300,7 @@ public class BluetoothLeService extends Service {
         // This is specific to Heart Rate Measurement.
         if (UUID_HM_RX_TX.equals(characteristic.getUuid())) {
             BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                    UUID.fromString(GattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
+                    UUID.fromString(BLEConnection.CLIENT_CHARACTERISTIC_CONFIG));
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             mBluetoothGatt.writeDescriptor(descriptor);
         }

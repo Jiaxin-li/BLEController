@@ -46,8 +46,6 @@ public class BSConnection implements IBluetoothConnection {
             e.printStackTrace();
 
         }
-
-
     }
     public void runBT() throws IOException, NullPointerException {
         //opens connection
@@ -90,33 +88,49 @@ public class BSConnection implements IBluetoothConnection {
 
 
     // send compiled command
-    public void sendControlBytes(byte[] ctrl) {
+    public boolean send(byte[] ctrl) {
         try {
             if (socket.isConnected()) {
                 out.write(ctrl);
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
+
         }
+        return false;
     }
 
-    @Override
+    public boolean send(byte ctrl) {
+        try {
+            if (socket.isConnected()) {
+                out.write(ctrl);
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return false;
+    }
+
+
     public boolean connect() {
         return false;
     }
 
-    public boolean disconnect() {
+    public void disconnect() {
 
         try {
             stop = true;
             out.close();
             in.close();
             socket.close();
-            return true;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+
     }
 
 

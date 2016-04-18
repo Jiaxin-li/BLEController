@@ -69,6 +69,7 @@ public class JoystickView extends View implements Runnable {
 
 	@Override
 	protected void onFinishInflate() {
+		super.onFinishInflate();
 	}
 
 	@Override

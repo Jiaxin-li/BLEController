@@ -1,7 +1,7 @@
 package com.robotic.goldenridge.blecontroller;
 
 import android.Manifest;
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,8 +18,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.robotic.goldenridge.blecontroller.JoystickView.OnJoystickMoveListener;
 
@@ -29,15 +28,14 @@ public class MainActivity extends AppCompatActivity { //
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 9;
 
     public static JoystickView joystick;
-    public static BSConnection btc = null ;
+
     //test for BLE
 
-    public static BLEConnection blc = null;
-    public static Context mContext;
 
+    public static Context mContext;
+    public static SharedPreferences prefs;
     // for settings
     private static final int RESULT_SETTINGS = 1;
-    private static SharedPreferences prefs;
 
     private  ImageButton startbtn;
     private  ImageButton soundbtn;
@@ -51,14 +49,14 @@ public class MainActivity extends AppCompatActivity { //
     private  ImageButton backwardRight;
     private  ImageButton dock;
 
-
+    private Robot robot;
 
     private final double RAD = 57.2957795;
     boolean OIstatus = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        robot = new Robot();
         setContentView(R.layout.activity_main);
         mContext= this.getApplicationContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -120,7 +118,7 @@ public class MainActivity extends AppCompatActivity { //
                     angle = -(180 + angle);
                 }*/
                 // drive strait forward
-                if(angle>= 0 - angleError && angle <= 0 + angleError ){
+                if(angle>= 0 - angleError && angle <=  angleError ){
                     RPWM = power;
                     LPWM = power;
                 }
@@ -148,7 +146,7 @@ public class MainActivity extends AppCompatActivity { //
                     LPWM = (int) (power * Math.cos(angleRad));
                 }
                 // logical independent solution
-                MessageHandler.drivePWM(RPWM,LPWM);
+                robot.drivePWM(RPWM,LPWM);
 
             }
         }, JoystickView.DEFAULT_LOOP_INTERVAL);
@@ -169,11 +167,11 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public void onClick(View arg0) {
                 if (OIstatus) {// turn off
-                    MessageHandler.stopcmd();
+                    robot.stopSCI();
                     startbtn.setImageResource(R.drawable.ic_key_black_48dp);
                     OIstatus = false;
                 } else { //turn on
-                    MessageHandler.startcmd();
+                    robot.startup();
                     startbtn.setImageResource(R.drawable.ic_key_white_48dp);
                     OIstatus = true;
                 }
@@ -183,7 +181,7 @@ public class MainActivity extends AppCompatActivity { //
         dock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                MessageHandler.dock();
+                robot.dock();
             }
         });
 
@@ -191,9 +189,9 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    MessageHandler.forwardLeft();
+                    robot.forwardLeft();
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    MessageHandler.stop();
+                    robot.stop();
                 }
                 return false;
             }
@@ -203,9 +201,9 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    MessageHandler.forward();
+                    robot.forward();
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    MessageHandler.stop();
+                    robot.stop();
                 } return false;
             }
         });
@@ -214,9 +212,9 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    MessageHandler.forwardRight();
+                    robot.forwardRight();
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    MessageHandler.stop();
+                    robot.stop();
                 } return false;
             }
         });
@@ -225,9 +223,9 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    MessageHandler.forwardLeft();
+                    robot.forwardLeft();
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    MessageHandler.stop();
+                    robot.stop();
                 }
                 return false;
             }
@@ -237,9 +235,9 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    MessageHandler.spinCW();
+                    robot.spinCW();
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    MessageHandler.stop();
+                    robot.stop();
                 } return false;
             }
         });
@@ -248,9 +246,9 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    MessageHandler.spinCCW();
+                    robot.spinCCW();
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    MessageHandler.stop();
+                    robot.stop();
                 } return false;
             }
         });
@@ -259,9 +257,9 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    MessageHandler.backwardLeft();
+                    robot.backwardLeft();
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    MessageHandler.stop();
+                    robot.stop();
                 } return false;
             }
         });
@@ -270,9 +268,9 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    MessageHandler.backward();
+                    robot.backward();
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    MessageHandler.stop();
+                    robot.stop();
                 } return false;
             }
         });
@@ -281,9 +279,9 @@ public class MainActivity extends AppCompatActivity { //
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    MessageHandler.backwardRight();
+                    robot.backwardRight();
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    MessageHandler.stop();
+                    robot.stop();
                 } return false;
             }
         });
@@ -313,23 +311,7 @@ public class MainActivity extends AppCompatActivity { //
         return super.onOptionsItemSelected(item);
     }
 
-    public static boolean isLE(){
-        return  prefs.getBoolean("isBLE", true);
-    }
 
-    public static int getSpeed(){
-        // constrain the value from 0 - 500
-        return constrain(Integer.valueOf(prefs.getString("speed", "0")),0,500);
-    }
-
-    public static int getRadius(){ // getInt() Throws ClassCastException if there is a preference with this name that is not an int.
-        return constrain(Integer.valueOf(prefs.getString("radius", "100")), 0, 2000);
-    }
-    private static int constrain(int ori, int min, int max){
-        if( ori < min) ori = min;
-        if( ori > max ) ori = max;
-        return ori;
-    }
 
 
     // test for permission
@@ -341,7 +323,7 @@ public class MainActivity extends AppCompatActivity { //
                 } else {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Functionality limited");
-                    builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons when in the background.");
+                    builder.setMessage("Since location access has not been granted, this app will not be able to localize.");
                     builder.setPositiveButton(android.R.string.ok, null);
                     builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override

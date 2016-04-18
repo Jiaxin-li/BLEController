@@ -72,7 +72,7 @@ public class DeviceScanActivity extends ListActivity {
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
-        if(MainActivity.isLE()){
+        if(Utility.isLE()){
             if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
                 Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
                 finish();
@@ -141,7 +141,7 @@ public class DeviceScanActivity extends ListActivity {
         }
 
         // Initializes list view adapter.
-        if(MainActivity.isLE()){
+        if(Utility.isLE()){
             mLeDeviceListAdapter = new LeDeviceListAdapter();
             setListAdapter(mLeDeviceListAdapter);
 
@@ -175,10 +175,10 @@ public class DeviceScanActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         //// TODO: 4/3/2016
         Log.d(TAG,"listItem clicked");// DEBUG can't be reached when in standard mode
-        if(MainActivity.isLE()){ //LEDevice
+        if(Utility.isLE()){ //LEDevice
              device= mLeDeviceListAdapter.getDevice(position);
             if (device == null) return;
-            MainActivity.blc = new BLEConnection(device.getAddress(),MainActivity.mContext);
+            MessageHandler.blc = new BLEConnection(device.getAddress(),MainActivity.mContext);
 //            if (leScanning) {
 //                mBluetoothAdapter.stopLeScan(mLeScanCallback);
 //                leScanning = false;
@@ -192,7 +192,7 @@ public class DeviceScanActivity extends ListActivity {
                 return;
             }
             Log.d(TAG,device.getAddress());
-            MainActivity.btc = new BSConnection(device.getAddress());
+            MessageHandler.btc = new BSConnection(device.getAddress());
         }
         setscanatate(false);
 
@@ -210,7 +210,7 @@ public class DeviceScanActivity extends ListActivity {
     }
 
     private void setscanatate(boolean state){
-        if(MainActivity.isLE()){
+        if(Utility.isLE()){
             scanLeDevice(state);
         }
         else{

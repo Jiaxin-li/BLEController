@@ -29,6 +29,25 @@ public class BLEConnection implements IBluetoothConnection {
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
+    /***Gatt Attributes****/
+    private static HashMap<String, String> attributes = new HashMap();
+    public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
+    public static String HM_10_CONF = "0000ffe0-0000-1000-8000-00805f9b34fb";
+    public static String RX_TX = "0000ffe1-0000-1000-8000-00805f9b34fb";
+    static {
+        // Sample Services.
+        attributes.put("0000ffe0-0000-1000-8000-00805f9b34fb", "HM 10 Serial");
+        attributes.put("00001800-0000-1000-8000-00805f9b34fb", "Device Information Service");
+        // Sample Characteristics.
+        attributes.put(RX_TX,"RX/TX data");
+        attributes.put("00002a29-0000-1000-8000-00805f9b34fb", "Manufacturer Name String");
+    }
+
+    public static String lookup(String uuid, String defaultName) {
+        String name = attributes.get(uuid);
+        return name == null ? defaultName : name;
+    }
+
     public BLEConnection(String address,Context context) {
 
         // Code to manage Service lifecycle.
@@ -102,9 +121,9 @@ public class BLEConnection implements IBluetoothConnection {
         return true;
     }
 
-    public boolean disconnect(){
+    public void disconnect(){
         mBluetoothLeService.disconnect();
-        return true;
+
 
     }
 
@@ -130,10 +149,10 @@ public class BLEConnection implements IBluetoothConnection {
             HashMap<String, String> currentServiceData = new HashMap<String, String>();
             uuid = gattService.getUuid().toString();
             currentServiceData.put(
-                    LIST_NAME, GattAttributes.lookup(uuid, unknownServiceString));
+                    LIST_NAME,lookup(uuid, unknownServiceString));
 
             // If the service exists for HM 10 Serial, say so.
-            if(GattAttributes.lookup(uuid, unknownServiceString) == "HM 10 Serial") {Log.d(TAG,"is serial"); } else {Log.e(TAG, "no serial"); }
+            if(lookup(uuid, unknownServiceString) == "HM 10 Serial") {Log.d(TAG,"is serial"); } else {Log.e(TAG, "no serial"); }
             currentServiceData.put(LIST_UUID, uuid);
             gattServiceData.add(currentServiceData);
 
@@ -144,14 +163,20 @@ public class BLEConnection implements IBluetoothConnection {
 
     }
 
-    public void sendControlBytes( byte[] tx){
+    public boolean send( byte[] tx){
         if(mConnected) {
             characteristicTX.setValue(tx);
             mBluetoothLeService.writeCharacteristic(characteristicTX);
             mBluetoothLeService.setCharacteristicNotification(characteristicRX,true);
+            return true;
         }
         else{
             Log.e(TAG,"Not connect");
+            return false;
         }
+    }
+
+    public boolean send( byte tx){
+        return send (new byte[]{tx} );
     }
 }

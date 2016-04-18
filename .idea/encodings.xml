@@ -3,7 +3,6 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/robotic/goldenridge/blecontroller/BluetoothLeService.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/robotic/goldenridge/blecontroller/DeviceScanActivity.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/robotic/goldenridge/blecontroller/GattAttributes.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/actionbar_indeterminate_progress.xml" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/listitem_device.xml" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />
