@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity { //
     private  ImageButton back;
     private  ImageButton backwardRight;
     private  ImageButton dock;
+    private  ImageButton path;
 
     private Robot robot;
 
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity { //
         backwardLeft = (ImageButton) findViewById(R.id.backleft);
         back = (ImageButton) findViewById(R.id.back);
         backwardRight = (ImageButton) findViewById(R.id.backright);
+        path = (ImageButton) findViewById(R.id.path);
 
 
         // test for permission over Android M
@@ -185,6 +187,13 @@ public class MainActivity extends AppCompatActivity { //
             }
         });
 
+        path.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                robot.testSquare(500,500);
+            }
+        });
+
         forwardLeft.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -196,6 +205,8 @@ public class MainActivity extends AppCompatActivity { //
                 return false;
             }
         });
+
+
 
         forward.setOnTouchListener(new View.OnTouchListener() {
             @Override

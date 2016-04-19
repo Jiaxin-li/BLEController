@@ -1,10 +1,15 @@
 package com.robotic.goldenridge.blecontroller;
 
+import android.util.Log;
+
+import java.util.LinkedList;
+
 /**
  * Created by jiaxin on 4/18/2016.
  * represent the Robot behaviour
  */
 public class Robot {
+    private static final String TAG =  Robot.class.getSimpleName();
 
     /** distance between wheels on the roomba, in millimeters */
     public static final int wheelbase = 258;
@@ -17,6 +22,9 @@ public class Robot {
 
     /** default update time in ms for auto sensors update */
     public static final int defaultSensorsUpdateTime = 200;
+
+    /** default update time in ms for tasks */
+    public static final int defaultTaskduration = 10;
 
     /** current mode, if known */
     int mode;
@@ -144,6 +152,14 @@ public class Robot {
     public static final int REMOTE_FORWARD      = 0x82;
     public static final int REMOTE_SPINRIGHT    = 0x81;
 
+    // taskQueue
+    private LinkedList<Runnable> tasks;
+    private Thread thread;
+    private boolean taskRunning;
+    private Runnable internalRunnable;
+
+
+
     private static final int STRAIT = 0x8000;
 
     private boolean send (byte []b){
@@ -153,6 +169,102 @@ public class Robot {
     private boolean send (byte b){
         return  MessageHandler.send(b);
     }
+
+    public Robot (){
+        taskRunning =false;
+        tasks = new LinkedList<Runnable>();
+        internalRunnable = new InternalRunnable();
+    }
+
+    private int getDesireSpeed(){
+        return Utility.getSpeed();
+    }
+
+    /********************taskQueue***************************************/
+    private class InternalRunnable implements Runnable {
+        public void run() {
+            internalRun();
+        }
+    }
+
+    private class RobotTask implements Runnable {
+        private byte[] b;
+        private int duration = defaultTaskduration;
+        private RobotTask (byte[]cmd,int duration){
+            this.b = cmd;
+            this.duration = duration;
+        }
+        private RobotTask (byte cmd,int duration){
+            this.b = new byte[]{cmd};
+            this.duration = duration;
+
+        }
+        public void run() {
+            executeTask();
+        }
+        private void executeTask(){
+            send(b);
+            try {
+                Thread.sleep(duration);
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+
+        }
+    }
+
+    public void startTask() {
+        if (!taskRunning) {
+            thread = new Thread(internalRunnable);
+            thread.setDaemon(true);
+            taskRunning = true;
+            thread.start();
+        }
+    }
+
+    public void stopTask() {
+        taskRunning = false;
+    }
+
+    public void addTask(Runnable task) {
+        Log.d(TAG, "addTask");
+        synchronized(tasks) {
+            tasks.addLast(task);
+            tasks.notify(); // notify any waiting threads
+        }
+    }
+
+    private Runnable getNextTask() {
+        Log.d(TAG, "getNextTask");
+        synchronized(tasks) {
+            if (tasks.isEmpty()) {
+                try {
+                    tasks.wait();
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "Task interrupted", e);
+                    stop();
+                }
+            }
+            return tasks.removeFirst();
+        }
+    }
+
+    private void internalRun() {
+        while(taskRunning) {
+            Runnable task = getNextTask();
+            try {
+                task.run();
+                Thread.yield();
+            } catch (Throwable t) {
+                Log.e(TAG, "Task threw an exception", t);
+            }
+        }
+    }
+
+
+
+
+
 
     /********************mode setting***************************************/
     /**
@@ -230,7 +342,7 @@ public class Robot {
      * Power off the Roomba.  Once powered off, the only way to wake it
      * is via wakeup() (if implemented) or via a physically pressing
      * the Power button
-     * @see #wakeup()
+     *
      */
     public void powerOff() {
         mode = MODE_UNKNOWN;
@@ -606,31 +718,81 @@ public class Robot {
         drive(0, 0);
     }
     public void forwardLeft(){
-        drive(Utility.getSpeed(), Utility.getRadius());
+        drive(getDesireSpeed(), Utility.getRadius());
     }
     public void forward(){
-        drive(Utility.getSpeed(), STRAIT);
+        drive(getDesireSpeed(), STRAIT);
     }
     public void forwardRight(){
-        drive(Utility.getSpeed(), -1 * Utility.getRadius());
+        drive(getDesireSpeed(), -1 * Utility.getRadius());
     }
     public void backwardLeft(){
-        drive(-1 * Utility.getSpeed(), Utility.getRadius());
+        drive(-1 * getDesireSpeed(), Utility.getRadius());
     }
     public void backward(){
-        drive(-1 * Utility.getSpeed(), STRAIT);
+        drive(-1 * getDesireSpeed(), STRAIT);
     }
     public void backwardRight(){
-        drive(-1 * Utility.getSpeed(), -1 * Utility.getRadius());
+        drive(-1 * getDesireSpeed(), -1 * Utility.getRadius());
     }
     public void spinCCW(){
-        drive(Utility.getSpeed(), 1);
+        drive(getDesireSpeed(), 1);
     }
     public void spinCW(){
-        drive(Utility.getSpeed(), -1);
+        drive(getDesireSpeed(), -1);
     }
 
+    public void stepDrive(int velocity ,int radius,int pausetime){
+        byte cmd[] = { (byte)DRIVE,(byte)(velocity>>>8),(byte)(velocity&0xff),
+                (byte)(radius >>> 8), (byte)(radius & 0xff) };
+        addTask(new RobotTask(cmd, pausetime));
+        addTask(new RobotTask((byte) STOP, defaultTaskduration));//stop();
+    }
 
+    /**
+     * Go straight at the current speed for a specified distance.
+     * Positive distance moves forward, negative distance moves backward.
+     * This method blocks until the action is finished.
+     * @param distance distance in millimeters, positive or negative
+     */
+    public void goStraight( int distance ) {
+        int velocity = getDesireSpeed();
+        int radius = STRAIT;
+        int pausetime = Math.abs(distance / velocity )*1000;  // mm/(mm/sec)*1000 = millisecond
+        stepDrive(velocity, radius, pausetime);
+    }
+
+    /**
+     * Spin right or spin left a particular number of degrees
+     * @param angle angle in degrees,
+     *              positive to spin left, negative to spin right
+     */
+    public void spin( int angle ) {
+        int velocity = getDesireSpeed();
+        int radius ;
+        if(angle>0){
+            radius =1;// ccw
+        }
+        else{
+            radius =-1;//cw
+        }
+
+        int pausetime = (int)Math.abs(millimetersPerDegree * angle / velocity)*1000;  //  millisecond
+        stepDrive(velocity,radius,pausetime);
+    }
+
+    public void testSquare(int a, int b){
+        goStraight(a);
+        spin(90);
+        goStraight(b);
+        spin(90);
+        goStraight(a);
+        spin(90);
+        goStraight(b);
+        spin(90);
+        startTask();
+
+    }
 
 
 
