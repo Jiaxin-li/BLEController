@@ -224,6 +224,7 @@ public class Robot {
 
     public void stopTask() {
         taskRunning = false;
+        stop();
     }
 
     public void addTask(Runnable task) {
@@ -741,11 +742,20 @@ public class Robot {
     public void spinCW(){
         drive(getDesireSpeed(), -1);
     }
-
+    /**
+     * execute a single step with given velocity and radious in a  specified time.
+     * Positive distance moves forward, negative distance moves backward.
+     * This method blocks until the action is finished.
+     * @param velocity velocity in millimeters/second, positive or negative
+     * @param radius radious in millimeters can be STRAIT OR +/- 1 for spinning
+     */
     public void stepDrive(int velocity ,int radius,int pausetime){
         byte cmd[] = { (byte)DRIVE,(byte)(velocity>>>8),(byte)(velocity&0xff),
                 (byte)(radius >>> 8), (byte)(radius & 0xff) };
         addTask(new RobotTask(cmd, pausetime));
+    }
+    /*post fix for task queue, used to stop the robot when the task is finished*/
+    public void taskPostfix(){
         byte stopcmd[]  = { (byte)DRIVE,0,0,0,0};
         addTask(new RobotTask(stopcmd, defaultTaskduration));//stop() is NOT STOP !!!
     }
@@ -791,6 +801,7 @@ public class Robot {
         spin(90);
         goStraight(b);
         spin(90);
+        taskPostfix();
         startTask();
 
     }
