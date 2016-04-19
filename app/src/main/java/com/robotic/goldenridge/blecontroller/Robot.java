@@ -242,7 +242,7 @@ public class Robot {
                     tasks.wait();
                 } catch (InterruptedException e) {
                     Log.e(TAG, "Task interrupted", e);
-                    stop();
+                    stopTask();
                 }
             }
             return tasks.removeFirst();
@@ -746,7 +746,8 @@ public class Robot {
         byte cmd[] = { (byte)DRIVE,(byte)(velocity>>>8),(byte)(velocity&0xff),
                 (byte)(radius >>> 8), (byte)(radius & 0xff) };
         addTask(new RobotTask(cmd, pausetime));
-        addTask(new RobotTask((byte) STOP, defaultTaskduration));//stop();
+        byte stopcmd[]  = { (byte)DRIVE,0,0,0,0};
+        addTask(new RobotTask(stopcmd, defaultTaskduration));//stop() is NOT STOP !!!
     }
 
     /**
